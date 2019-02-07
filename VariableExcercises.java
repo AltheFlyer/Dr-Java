@@ -31,6 +31,7 @@ public class VariableExcercises {
     System.out.println(firstInput + " x " + secondInput + " = " + product);
     System.out.println(firstInput + " / " + secondInput + " = " + quotient);
     System.out.println(firstInput + " % " + secondInput + " = " + remainder);
+    
     //Activity 6
     double length = 3.24;
     double width = 4.20;
