@@ -6,6 +6,8 @@
  * Prints two concatenated strings
  */
 
+package io;
+
 public class BasicConcat {
   
   public static void main(String[] args) {

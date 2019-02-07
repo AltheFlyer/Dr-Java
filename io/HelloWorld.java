@@ -6,6 +6,8 @@
  * A program that prints "Hello, World!" to console.
  */
 
+package io;
+
 public class HelloWorld {
   
   public static void main(String[] args) {

@@ -6,6 +6,8 @@
  * Prints out numbers on different lines
  */
 
+package io;
+
 public class NumberOutput {
   
   public static void main(String[] args) {

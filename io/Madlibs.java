@@ -6,6 +6,8 @@
  * A Madlibs that uses string format help me
  */
 
+package io;
+
 import java.util.Scanner;
 
 public class Madlibs {

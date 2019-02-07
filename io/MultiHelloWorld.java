@@ -6,6 +6,8 @@
  * Prints Hello World a lot
  */
 
+package io;
+
 public class MultiHelloWorld {
   
   public static void main(String[] args) {

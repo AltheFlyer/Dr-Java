@@ -6,6 +6,8 @@
  * Prints the remainder of a simple division
  */
 
+package io;
+
 public class BasicModulo {
   
   public static void main(String[] args) {
