@@ -1,9 +1,9 @@
 /**
- * VariableExcercises.java
+ * [VariableExcercises.java]
+ * Simple excercises with variables
  * @version 1.0
  * @author Allen Liu
  * @since Feb 6, 2019
- * Simple excercises with variables
  */
 
 public class VariableExcercises {
