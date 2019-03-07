@@ -14,14 +14,23 @@ import java.io.IOException;
 public class FileIO1 {
     
     public static void main(String[] args) throws IOException {
-        PrintWriter output = new PrintWriter(new File("address.txt"));
         Scanner input = new Scanner(System.in);
         String address = "";
         
         System.out.println("Enter your address:");
         address = input.nextLine();
         
-        output.println(address);
+        writeToFile("address.txt", address);
+    }
+    
+    /**
+     * writeToFile
+     * @param filename The name of the file to write to
+     * @param s The string to write to the file
+     */
+    public static void writeToFile(String filename, String s) throws IOException {
+        PrintWriter output = new PrintWriter(new File(filename));
+        output.print(s);
         output.close();
     }
 }

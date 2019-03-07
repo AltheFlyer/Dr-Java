@@ -14,8 +14,8 @@ import java.io.IOException;
 public class FileIO6 {
     
     public static void main(String[] args) throws IOException {
-        PrintWriter output;
         Scanner input = new Scanner(System.in);
+        String out = "";
         String filename, scannerName, message;
         
         System.out.println("Enter the name of the file");
@@ -32,18 +32,29 @@ public class FileIO6 {
         System.out.println("Enter a message to output");
         message = input.nextLine();
         
-        output = new PrintWriter(new File(filename + ".java"));
         if (scannerName.length() > 0) {
-            output.println("import java.util.Scanner;");
-        }
-        output.printf("public class %s {\n", filename);
-        output.printf("\tpublic static void main(String[] args) {\n");
-        if (scannerName.length() > 0) {
-            output.printf("\t\tScanner %s = new Scanner(System.in);\n", scannerName);
+            out += "import java.util.Scanner;\n";
         }
         
-        output.printf("\t\tSystem.out.println(\"%s\");\n", message);
-        output.println("\t}\n}");
+        out += String.format("public class %s {\n", filename);
+        out += String.format("\tpublic static void main(String[] args) {\n");
+        if (scannerName.length() > 0) {
+            out += String.format("\t\tScanner %s = new Scanner(System.in);\n", scannerName);
+        }
+        
+        out += String.format("\t\tSystem.out.println(\"%s\");\n", message);
+        out += "\t}\n}";
+        writeToFile(filename + ".java", out);
+    }
+    
+    /**
+     * writeToFile
+     * @param filename The name of the file to write to
+     * @param s The string to write to the file
+     */
+    public static void writeToFile(String filename, String s) throws IOException {
+        PrintWriter output = new PrintWriter(new File(filename));
+        output.print(s);
         output.close();
     }
 }

@@ -14,7 +14,6 @@ import java.io.IOException;
 public class FileIO5 {
     
     public static void main(String[] args) throws IOException {
-        PrintWriter output = new PrintWriter(new File("webpage.html"));
         Scanner input = new Scanner(System.in);
         String html = "<html>\n" +
             "<head>\n" +
@@ -36,7 +35,17 @@ public class FileIO5 {
         System.out.println("Enter a paragraph");
         String para = input.nextLine();
         
-        output.println(String.format(html, title, header, para));
-        output.close();               
+        writeToFile(String.format(html, title, header, para));             
+    }
+    
+    /**
+     * writeToFile
+     * @param filename The name of the file to write to
+     * @param s The string to write to the file
+     */
+    public static void writeToFile(String filename, String s) throws IOException {
+        PrintWriter output = new PrintWriter(new File(filename));
+        output.print(s);
+        output.close();
     }
 }

@@ -14,8 +14,6 @@ import java.io.IOException;
 public class FileIO4 {
     
     public static void main(String[] args) throws IOException {
-        PrintWriter output;
-        Scanner fileIn;
         Scanner input = new Scanner(System.in);
         String file;
         String command;
@@ -26,20 +24,12 @@ public class FileIO4 {
         System.out.println("Enter the name of the file (no extensions)");
         file = input.nextLine();
         if (command.equals("encode")) {
-            fileIn = new Scanner(new File(file + ".txt"));
-            output = new PrintWriter(new File(file + ".coded"));
-            password = fileIn.nextLine();
-            output.print(encode(password));
-            output.close();
-            System.out.println(encode(password));
+            password = readFromFile(file + ".txt");
+            writeToFile(file + ".coded", encode(password));
         }
         if (command.equals("decode")) {
-            fileIn = new Scanner(new File(file + ".coded"));
-            output = new PrintWriter(new File(file + ".txt"));
-            password = fileIn.nextLine();
-            output.print(decode(password));
-            output.close();
-            System.out.println(decode(password));
+            password = readFromFile(file + ".coded");
+            writeToFile(file + ".txt", decode(password));
         }
     }
     
@@ -69,5 +59,30 @@ public class FileIO4 {
             }
         }
         return out;
+    }
+    
+    /**
+     * writeToFile
+     * @param filename The name of the file to write to
+     * @param s The string to write to the file
+     */
+    public static void writeToFile(String filename, String s) throws IOException {
+        PrintWriter output = new PrintWriter(new File(filename));
+        output.print(s);
+        output.close();
+    }
+    
+    /**
+     * readFromFile
+     * @param filename The name of the file to read from
+     * @param int, the number of words in that file
+     */
+    public static String readFromFile(String filename) throws IOException {
+        String text = "";
+        Scanner input = new Scanner(new File(filename));
+        while (input.hasNextLine()) {
+            text += input.nextLine();
+        }
+        return text;
     }
 }

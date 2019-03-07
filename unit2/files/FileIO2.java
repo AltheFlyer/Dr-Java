@@ -14,15 +14,24 @@ import java.io.IOException;
 public class FileIO2 {
     
     public static void main(String[] args) throws IOException {
-        Scanner input = new Scanner(new File("read.txt"));
-        int words = 0;
         
+        int numWords = readFromFile("read.txt");
+       
+        System.out.println(numWords);
+    }
+    
+    /**
+     * readFromFile
+     * @param filename The name of the file to read from
+     * @param int, the number of words in that file
+     */
+    public static int readFromFile(String filename) throws IOException {
+        int words = 0;
+        Scanner input = new Scanner(new File(filename));
         while (input.hasNext()) {
             input.next();
             ++words;
         }
-        input.close();
-        
-        System.out.println(words);
+        return words;
     }
 }
