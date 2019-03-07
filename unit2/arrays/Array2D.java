@@ -61,7 +61,7 @@ public class Array2D {
             }
             
             if (hasLine(grid) != '0') {
-                System.out.printf("Player %s wins!!!", hasLine(grid));
+                System.out.printf("Player %s wins!!!\n", hasLine(grid));
             } else {
                 System.out.println("Draw, nobody wins!");
             }
@@ -77,12 +77,19 @@ public class Array2D {
      */
     public static char hasLine(char[][] arr) {
         //Go through rows and columns
+        int len = arr.length;
         for (int i = 0; i < arr.length; ++i) {
-            if (arr[i][0] == arr[i][1] && arr[i][0] == arr[i][2] && arr[i][0] != '-') {
-                return arr[i][0];
+            //Row
+            if (gridVal(arr, 1 + i * len) == gridVal(arr, 1 + i * len + 1) && 
+                gridVal(arr, 1 + i * len) == gridVal(arr, 1 + i * len + 2) && 
+                gridVal(arr, 3 + i * len) != '-') {
+                return gridVal(arr, 1 + i * 3);
             }
-            if (arr[0][i] == arr[1][i] && arr[0][i] == arr[2][i] && arr[0][i] != '-') {
-                return arr[0][i];
+            //Column
+            if (gridVal(arr, 1 + i) == gridVal(arr, 1 + i + len) && 
+                gridVal(arr, 1 + i + len) == gridVal(arr, 1 + i + len * 2) && 
+                gridVal(arr, 1 + i + len * 2) != '-') {
+                return gridVal(arr, 1 + i);
             }
         }
         if (arr[0][0] == arr[1][1] && arr[0][0] == arr[2][2] && arr[0][0] != '-') {
@@ -110,5 +117,8 @@ public class Array2D {
         return false;
     }
     
-    
+    public static char gridVal(char[][] arr, int pos) {
+        pos--;
+        return arr[pos /3][pos %3];
+    }
 }
