@@ -1,6 +1,8 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileReader;
+
 
 /**
  * Dankenstein.java
@@ -10,7 +12,7 @@ import java.io.IOException;
  * Counts the letter occurances in a file
  */
 
-public class Dankenstein {
+public class Dankensteinn {
     
     public static void main(String[] args) throws IOException {
         String allText = readFile("Frankenstein.txt");
@@ -55,12 +57,13 @@ public class Dankenstein {
      * @return String, the text contained within the file
      */
     public static String readFile(String name) throws IOException {
-        Scanner input = new Scanner(new File(name));
+        //File reader needed because Scanner doesn't work normally
+        Scanner input = new Scanner(new FileReader(new File(name)));
         String out = "";
         String s = "";
         int count = 0;
         while (input.hasNext()) {
-            s = input.next();
+            s = input.nextLine();
             out += s.toLowerCase();
             count++;
             //System.out.println(out);
