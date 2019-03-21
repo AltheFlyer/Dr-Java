@@ -21,35 +21,34 @@ public class BattleRoyale {
             {'.', '.', '.'}
         };
         */
-
+        
+        int posX = 0;
+        int posY = 0;
         for (int y = 0; y < map.length; ++y) {
             for (int x = 0; x < map[0].length; ++x) {
                 System.out.print(map[y][x]);
+                if (map[y][x] == 'p') {
+                    posX = x;
+                    posY = y;
+                }
             }
             System.out.println();
         }
         
         int cX = map[0].length / 2;
         int cY = map.length / 2;
-        System.out.printf("%d, %d\n", cX, cY);
-        System.out.println(numLoot(map, 4, cX, cY));
+        map[cY][cX] = 'f';
+        
+        System.out.printf("%d, %d\n", posX, posY);
+        System.out.println(numLoot(map, 0, posX, posY));
     }
     
-    public static int numLoot(char[][] map, int turnsLeft, int x, int y) {
-        if (turnsLeft == 0) {
-            if (map[y][x] == 'p') {
-                /*
-                for (int y1 = 0; y1 < 3; ++y1) {
-                    for (int x1 = 0; x1 < 3; ++x1) {
-                        System.out.print(map[y1][x1]);
-                    }
-                    System.out.println();
-                }
-                System.out.println();
-                */
+    public static int numLoot(char[][] map, int turns, int x, int y) {
+        if (turns > map.length / 2) {
+            if (map[y][x] == 'f') {
                 return 0;
-                
             }
+            //Invalid ending
             return -99999;
         }
 
@@ -69,34 +68,35 @@ public class BattleRoyale {
         
         //System.out.println();
 
+        //Check if out of bounds:
+        if (y > map.length - 1 - turns || y < turns || x > map.length - 1 - turns || x < turns) {
+            return -9999;
+        }
+        
         if (map[y][x] == '1') {
             points = 1;
         }
         
-        copy[y][x] = 'v';
+        //copy[y][x] = 'v';
         
         //4-way branch:
         int a = -1, b = -1, c = -1, d = -1;
+        //System.out.println("Possible valid: " + x + ", " + y);
         if (x > 0) {
-            a = points + numLoot(copy, turnsLeft-1, x-1, y);
+            a = points + numLoot(copy, turns+1, x-1, y);
         }
         if (y > 0) {
-            b = points + numLoot(copy, turnsLeft-1, x, y-1);
+            b = points + numLoot(copy, turns+1, x, y-1);
         }
         if (x < map[0].length - 1){
-            c = points + numLoot(copy, turnsLeft-1, x+1, y); 
+            c = points + numLoot(copy, turns+1, x+1, y); 
         }
         if (y < map.length - 1) {
-            d = points + numLoot(copy, turnsLeft-1, x, y+1);
+            d = points + numLoot(copy, turns+1, x, y+1);
         }
         
-        if (turnsLeft == 5) {
-            for (int y1 = 0; y1 < map.length; ++y1) {
-                for (int x1 = 0; x1 < map[0].length; ++x1) {
-                    System.out.print(copy[y1][x1]);
-                }
-            System.out.println();
-        }
+        if (copy[y][x] == 'f') {
+            return Math.max(0, Math.max(Math.max(a, b), Math.max(c, d)));
         }
         return Math.max(Math.max(a, b), Math.max(c, d));
     }
