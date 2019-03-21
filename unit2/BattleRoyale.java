@@ -12,6 +12,8 @@ import java.io.IOException;
 
 public class BattleRoyale {
     
+    public static char[][] mainMap;
+    
     public static void main(String[] args) throws IOException {
         //readFromFile("map.txt");
         char[][] map = readFromFile("map.txt");
@@ -41,6 +43,17 @@ public class BattleRoyale {
         
         System.out.printf("%d, %d\n", posX, posY);
         System.out.println(numLoot(map, 0, posX, posY));
+        
+        for (int y = 0; y < map.length; ++y) {
+            for (int x = 0; x < map[0].length; ++x) {
+                System.out.print(map[y][x]);
+                if (map[y][x] == 'p') {
+                    posX = x;
+                    posY = y;
+                }
+            }
+            System.out.println();
+        }
     }
     
     public static int numLoot(char[][] map, int turns, int x, int y) {
@@ -77,7 +90,10 @@ public class BattleRoyale {
             points = 1;
         }
         
-        //copy[y][x] = 'v';
+        if (map[y][x] != 'p') {
+            map[y][x] = 'v';
+            copy[y][x] = 'v';
+        }
         
         //4-way branch:
         int a = -1, b = -1, c = -1, d = -1;
@@ -88,14 +104,16 @@ public class BattleRoyale {
         if (y > 0) {
             b = points + numLoot(copy, turns+1, x, y-1);
         }
-        if (x < map[0].length - 1){
+        if (x < map[0].length - 1) {
             c = points + numLoot(copy, turns+1, x+1, y); 
         }
         if (y < map.length - 1) {
             d = points + numLoot(copy, turns+1, x, y+1);
         }
         
-        if (copy[y][x] == 'f') {
+        //If center of map
+        if (y == map.length / 2 && x == map[0].length / 2) {
+            //Find if more loot/points can be earned
             return Math.max(0, Math.max(Math.max(a, b), Math.max(c, d)));
         }
         return Math.max(Math.max(a, b), Math.max(c, d));
