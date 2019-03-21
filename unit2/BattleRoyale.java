@@ -23,22 +23,17 @@ public class BattleRoyale {
             {'.', '.', '.'}
         };
         */
-        
-        int posX = 0;
-        int posY = 0;
+
         for (int y = 0; y < map.length; ++y) {
             for (int x = 0; x < map[0].length; ++x) {
                 System.out.print(map[y][x]);
-                if (map[y][x] == 'p') {
-                    posX = x;
-                    posY = y;
-                }
             }
             System.out.println();
         }
         
         int cX = map[0].length / 2;
         int cY = map.length / 2;
+<<<<<<< HEAD
         map[cY][cX] = 'f';
         
         System.out.printf("%d, %d\n", posX, posY);
@@ -54,14 +49,27 @@ public class BattleRoyale {
             }
             System.out.println();
         }
+=======
+        System.out.printf("%d, %d\n", cX, cY);
+        System.out.println(numLoot(map, 4, cX, cY));
+>>>>>>> parent of a2820a3... kill me now
     }
     
-    public static int numLoot(char[][] map, int turns, int x, int y) {
-        if (turns > map.length / 2) {
-            if (map[y][x] == 'f') {
+    public static int numLoot(char[][] map, int turnsLeft, int x, int y) {
+        if (turnsLeft == 0) {
+            if (map[y][x] == 'p') {
+                /*
+                for (int y1 = 0; y1 < 3; ++y1) {
+                    for (int x1 = 0; x1 < 3; ++x1) {
+                        System.out.print(map[y1][x1]);
+                    }
+                    System.out.println();
+                }
+                System.out.println();
+                */
                 return 0;
+                
             }
-            //Invalid ending
             return -99999;
         }
 
@@ -81,40 +89,53 @@ public class BattleRoyale {
         
         //System.out.println();
 
-        //Check if out of bounds:
-        if (y > map.length - 1 - turns || y < turns || x > map.length - 1 - turns || x < turns) {
-            return -9999;
-        }
-        
         if (map[y][x] == '1') {
             points = 1;
         }
         
+<<<<<<< HEAD
         if (map[y][x] != 'p') {
             map[y][x] = 'v';
             copy[y][x] = 'v';
         }
+=======
+        copy[y][x] = 'v';
+>>>>>>> parent of a2820a3... kill me now
         
         //4-way branch:
         int a = -1, b = -1, c = -1, d = -1;
-        //System.out.println("Possible valid: " + x + ", " + y);
         if (x > 0) {
-            a = points + numLoot(copy, turns+1, x-1, y);
+            a = points + numLoot(copy, turnsLeft-1, x-1, y);
         }
         if (y > 0) {
-            b = points + numLoot(copy, turns+1, x, y-1);
+            b = points + numLoot(copy, turnsLeft-1, x, y-1);
         }
+<<<<<<< HEAD
         if (x < map[0].length - 1) {
             c = points + numLoot(copy, turns+1, x+1, y); 
+=======
+        if (x < map[0].length - 1){
+            c = points + numLoot(copy, turnsLeft-1, x+1, y); 
+>>>>>>> parent of a2820a3... kill me now
         }
         if (y < map.length - 1) {
-            d = points + numLoot(copy, turns+1, x, y+1);
+            d = points + numLoot(copy, turnsLeft-1, x, y+1);
         }
         
+<<<<<<< HEAD
         //If center of map
         if (y == map.length / 2 && x == map[0].length / 2) {
             //Find if more loot/points can be earned
             return Math.max(0, Math.max(Math.max(a, b), Math.max(c, d)));
+=======
+        if (turnsLeft == 5) {
+            for (int y1 = 0; y1 < map.length; ++y1) {
+                for (int x1 = 0; x1 < map[0].length; ++x1) {
+                    System.out.print(copy[y1][x1]);
+                }
+            System.out.println();
+        }
+>>>>>>> parent of a2820a3... kill me now
         }
         return Math.max(Math.max(a, b), Math.max(c, d));
     }

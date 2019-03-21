@@ -51,7 +51,7 @@ public class Recursion4 {
                 System.out.println(bot * 10 + top + plus);
             }
         }
-        //3+ Digit number:
+        //3 Digit number:
         if (digits >= 3) {
             //Use first digit as first place
             for (int i = 0; i < 3; ++i) {
