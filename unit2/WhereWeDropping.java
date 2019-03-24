@@ -10,47 +10,64 @@ import java.io.IOException;
  * @since March 20, 2019
  */
 
-public class BattleRoyale {
+public class WhereWeDropping {
     
     public static char[][] mainMap;
     
     public static void main(String[] args) throws IOException {
         //readFromFile("map.txt");
         char[][] map = readFromFile("map.txt");
-        /*{
+        /*
             {'p', '.', '.'},
             {'.', '.', '1'},
             {'.', '.', '.'}
         };
         */
+        char[][] originalMap = new char[map.length][map[0].length];
+        int[][] opt = new int[map.length][map[0].length];
 
         int posX = 0, posY = 0;
-        
-        for (int y = 0; y < map.length; ++y) {
-            for (int x = 0; x < map[0].length; ++x) {
-                //System.out.print(map[y][x]);
-                if (map[y][x] == 'p') {
-                    posX = x;
-                    posY = y;
-                }
-            }
-            //System.out.println();
-        }
+      
         
         int cX = map[0].length / 2;
         int cY = map.length / 2;
         map[cY][cX] = 'f';
         
+        regenArray(originalMap, map);
+        
+        int optX = 0;
+        int optY = 0;
+        int maxLoot = -1;
+        
+        //System.out.println("123456789".indexOf('.'));
+        //Where we droppin:
+        for (int y = 0; y < map.length; ++y) {
+            for (int x = 0; x < map[0].length; ++x) {
+                if ("123456789".indexOf(map[y][x]) == -1) {
+                    opt[y][x] = numLoot(map, 0, x, y);
+                    regenArray(map, originalMap);
+                    if (maxLoot < opt[y][x]) {
+                        maxLoot = opt[y][x];
+                        optX = x;
+                        optY = y;
+                    }
+                } else {
+                    //System.out.println(map[y][x]);
+                    opt[y][x] = -9999;
+                }
+            }
+            //System.out.println();
+        }
+        
+        
         //System.out.printf("%d, %d\n", posX, posY);
-        int loot = numLoot(map, 0, posX, posY);
+        //int loot = numLoot(map, 0, posX, posY);
+        map[optY][optX] = 'p';
+        int loot = numLoot(map, 0, optX, optY);
         
         for (int y = 0; y < map.length; ++y) {
             for (int x = 0; x < map[0].length; ++x) {
                 System.out.print(map[y][x]);
-                if (map[y][x] == 'p') {
-                    posX = x;
-                    posY = y;
-                }
             }
             System.out.println();
         }

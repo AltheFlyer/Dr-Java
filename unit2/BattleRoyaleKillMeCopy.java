@@ -10,7 +10,7 @@ import java.io.IOException;
  * @since March 20, 2019
  */
 
-public class BattleRoyale {
+public class BattleRoyaleKillMeCopy {
     
     public static char[][] mainMap;
     
@@ -28,21 +28,21 @@ public class BattleRoyale {
         
         for (int y = 0; y < map.length; ++y) {
             for (int x = 0; x < map[0].length; ++x) {
-                //System.out.print(map[y][x]);
+                System.out.print(map[y][x]);
                 if (map[y][x] == 'p') {
                     posX = x;
                     posY = y;
                 }
             }
-            //System.out.println();
+            System.out.println();
         }
         
         int cX = map[0].length / 2;
         int cY = map.length / 2;
         map[cY][cX] = 'f';
         
-        //System.out.printf("%d, %d\n", posX, posY);
-        int loot = numLoot(map, 0, posX, posY);
+        System.out.printf("%d, %d\n", posX, posY);
+        System.out.println(numLoot(map, 0, posX, posY));
         
         for (int y = 0; y < map.length; ++y) {
             for (int x = 0; x < map[0].length; ++x) {
@@ -54,48 +54,29 @@ public class BattleRoyale {
             }
             System.out.println();
         }
-        System.out.printf("%d item(s) looted.\n", loot);
     }
     
     public static int numLoot(char[][] map, int turns, int x, int y) {
-        //The concede code:
-        //Check if out of bounds
-        if (y > map.length - 1 - turns || y < turns || x > map.length - 1 - turns || x < turns) {
-            return -9999;
-        }
-        //Check if impossible to return
-        int cX = map.length / 2;
-        if (Math.abs(x - cX) + Math.abs(y - cX) > map.length / 2 - turns) {
-            return -9999;
-        }
-        
         if (turns > map.length / 2) {
             if (map[y][x] == 'f') {
                 return 0;
+                
             }
             return -99999;
         }
 
         int points = 0;
-        int tMod = 0;
         
         //System.out.println(turnsLeft);
         
-        
-
-        //IN PROGRESS count scores
-        if ("123456789".indexOf(map[y][x]) > -1) {
-            points = map[y][x] - 48;
-            tMod = points - 1;
-            if (turns + tMod + 1 > map.length / 2) {
-                return -9999;
-            }
+        //Check if out of bounds
+        if (y > map.length - 1 - turns || y < turns || x > map.length - 1 - turns || x < turns) {
+            return -9999;
         }
-        /*
+
         if (map[y][x] == '1') {
             points = 1;
         }
-        */
         
         if (map[y][x] != 'p' && map[y][x] != 'f') {
             map[y][x] = 'v';
@@ -110,25 +91,25 @@ public class BattleRoyale {
         int a = -1, b = -1, c = -1, d = -1;
         //Left
         if (x > 0) {
-            a = points + numLoot(aArr, turns+1+tMod, x-1, y);
+            a = points + numLoot(aArr, turns+1, x-1, y);
         }
         //Up
         if (y > 0) {
-            b = points + numLoot(bArr, turns+1+tMod, x, y-1);
+            b = points + numLoot(bArr, turns+1, x, y-1);
         }
         //Right
         if (x < map[0].length - 1) {
-            c = points + numLoot(cArr, turns+1+tMod, x+1, y); 
+            c = points + numLoot(cArr, turns+1, x+1, y); 
         }
         //Down
         if (y < map.length - 1) {
-            d = points + numLoot(dArr, turns+1+tMod, x, y+1);
+            d = points + numLoot(dArr, turns+1, x, y+1);
         }
   
         //System.out.printf("Turn %d: [%d, %d]\n", turns, x, y);
         //System.out.printf("%d %d %d %d \n", a, b, c, d);
         
-        int max = -1;
+        int max = 0;
         if (max < a) {
             regenArray(map, aArr);
             max = a;
