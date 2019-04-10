@@ -13,8 +13,8 @@ public class AccountTester {
     }
     
     public static void testCheckingAccount() {
-        CheckingAccount simpleAccount = new CheckingAccount();
-        CheckingAccount presetAccount = new CheckingAccount(300);
+        CheckingAccount simpleAccount = new CheckingAccount(0);
+        CheckingAccount presetAccount = new CheckingAccount(0,300);
     
         /* Expected:
          * 0
@@ -42,8 +42,8 @@ public class AccountTester {
     }
     
     public static void testSavingsAccount() {
-        SavingsAccount simpleAccount = new SavingsAccount();
-        SavingsAccount presetAccount = new SavingsAccount(1100, 10);
+        SavingsAccount simpleAccount = new SavingsAccount(0);
+        SavingsAccount presetAccount = new SavingsAccount(0,1100, 10);
         
         /* Expected:
          * -100
@@ -62,8 +62,8 @@ public class AccountTester {
     }
     
     public static void testBankAccount() {
-        BankAccount simpleAccount = new BankAccount();
-        BankAccount presetAccount = new BankAccount(2019);
+        BankAccount simpleAccount = new BankAccount(0);
+        BankAccount presetAccount = new BankAccount(0,2019);
         
         /* Expected: 
          * 0

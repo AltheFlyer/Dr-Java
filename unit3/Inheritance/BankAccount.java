@@ -1,6 +1,6 @@
 /**
  * BankAccount.java
- * @version 1.0
+ * @version 1.2
  * @author Allen Liu
  * @since April 5, 2019
  * The base class for a simple bank account
@@ -8,13 +8,16 @@
 public class BankAccount {
 
     private double balance;
+    private final int ID;
     
-    BankAccount() {
+    BankAccount(int id) {
         balance = 0;
+        ID = id;
     }
     
-    BankAccount(double balance) {
+    BankAccount(int id, double balance) {
         this.balance = balance;
+        ID = id;
     }
     
     /**
@@ -36,10 +39,11 @@ public class BankAccount {
      * @return boolean, whether the transaction was successful or not
      */
     public boolean withdraw(double amount) {
-        if ((amount > 0) && (balance >= amount)) {
+        if (balance >= amount) {
             balance -= amount;
             return true;
         }
+        balance -= amount;
         return false;
     }
     

@@ -1,6 +1,6 @@
 /**
  * CheckingAccount.java
- * @version 1.0
+ * @version 1.2
  * @author Allen Liu
  * @since April 5, 2019
  * The base class for a checking account, 
@@ -11,12 +11,12 @@ class CheckingAccount extends BankAccount {
     private static final double WITHDRAWAL_FEE = 1;
     private static final double MINIMUM_BALANCE = 100;
     
-    CheckingAccount() {
-        super();
+    CheckingAccount(int id) {
+        super(id);
     }
     
-    CheckingAccount(double balance) {
-        super(balance);
+    CheckingAccount(int id, double balance) {
+        super(id, balance);
     }
     
     /**
