@@ -62,30 +62,30 @@ public class AccountTester {
     }
     
     public static void testBankAccount() {
-        BankAccount simpleAccount = new BankAccount(0);
-        BankAccount presetAccount = new BankAccount(0,2019);
+        //BankAccount simpleAccount = new BankAccount(0);
+        //BankAccount presetAccount = new BankAccount(0,2019);
         
         /* Expected: 
          * 0
          * 2019
          */
-        printBalances(simpleAccount, presetAccount);
+        //printBalances(simpleAccount, presetAccount);
         
         /* Expected:
          * 500
          * 2142.12
          */
-        simpleAccount.deposit(500);
-        presetAccount.deposit(123.12);
-        printBalances(simpleAccount, presetAccount);
+        //simpleAccount.deposit(500);
+        //presetAccount.deposit(123.12);
+        //printBalances(simpleAccount, presetAccount);
         
         /* Expected:
          * 377
          * 0.12 (or some bs)
          */
-        simpleAccount.withdraw(123);
-        presetAccount.withdraw(2142);
-        printBalances(simpleAccount, presetAccount);
+        //simpleAccount.withdraw(123);
+        //presetAccount.withdraw(2142);
+        //printBalances(simpleAccount, presetAccount);
         
         /* Expected:
          * false
@@ -93,9 +93,9 @@ public class AccountTester {
          * false
          * false
          */
-        System.out.println(presetAccount.withdraw(100));
-        printBalances(presetAccount);
-        System.out.println(presetAccount.deposit(-1000));
-        System.out.println(presetAccount.withdraw(-1000));
+        //System.out.println(presetAccount.withdraw(100));
+        //printBalances(presetAccount);
+        //System.out.println(presetAccount.deposit(-1000));
+        //System.out.println(presetAccount.withdraw(-1000));
     }
 }

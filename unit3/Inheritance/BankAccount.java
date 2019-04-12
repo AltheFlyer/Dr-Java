@@ -5,7 +5,7 @@
  * @since April 5, 2019
  * The base class for a simple bank account
  */
-public class BankAccount {
+abstract public class BankAccount {
 
     private double balance;
     private final int ID;
@@ -55,4 +55,7 @@ public class BankAccount {
         return balance;
     }
       
+    public int getID() {
+        return ID;
+    }
 }
