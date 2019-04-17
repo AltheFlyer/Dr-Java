@@ -46,6 +46,7 @@ public class Sheep extends Entity {
     public void tick() {
         modHealth(-1);
         refreshMove();
+        super.tick();
     }
     
     public String getEntityType() {

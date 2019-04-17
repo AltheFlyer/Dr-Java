@@ -4,7 +4,7 @@ abstract public class Entity {
     private int maxHealth = 40;
     
     private int age;
-    private int maxAge;
+    private int maxAge = 20;
     
     private int x, y;
     private boolean canMove;
@@ -12,11 +12,12 @@ abstract public class Entity {
     World world;
     
     public Entity(int x, int y, World w) {
-        health = 40;
+        health = 20;
         world = w;
         this.x = x;
         this.y = y;
         canMove = true;
+        age = 0;
     }
     
     public int move() {
@@ -28,7 +29,10 @@ abstract public class Entity {
     }
     
     public void tick() {
-        
+        age++;
+        if (age > maxAge) {
+            health = 0;
+        }
     }
     
     public void setPos(int x, int y) {

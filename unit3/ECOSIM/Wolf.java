@@ -39,6 +39,7 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     public void tick() {
         modHealth(-1);
         refreshMove();
+        super.tick();
     }
     
     public String getEntityType() {

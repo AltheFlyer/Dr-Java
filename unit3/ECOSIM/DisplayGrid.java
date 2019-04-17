@@ -7,6 +7,8 @@
 // Graphics Imports
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 
 class DisplayGrid { 
@@ -44,34 +46,71 @@ class DisplayGrid {
       frame.repaint();
   }
       
-  class GridAreaPanel extends JPanel {
+  class GridAreaPanel extends JPanel implements MouseListener {
+      
+    int mX = 0;
+    int mY = 0;
+    
+    public GridAreaPanel() {
+        addMouseListener(this);
+    }
+    
     public void paintComponent(Graphics g) {        
       //super.repaint();
       
       setDoubleBuffered(true); 
       g.setColor(Color.BLACK);
       
-      for(int i = 0; i<world[0].length;i=i+1)
-      { 
-        for(int j = 0; j<world.length;j=j+1) 
-        { 
-          
-          if (world[i][j].equals("Wolf"))    //This block can be changed to match character-color pairs
-            g.setColor(Color.RED);
-          else if (world[i][j].equals("Sheep"))
-            g.setColor(Color.BLUE);
-          else if (world[i][j].equals("Grass"))
-            g.setColor(Color.GREEN);
-          else
-            g.setColor(Color.WHITE);
-          
-          g.fillRect(j*GridToScreenRatio, i*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
-          g.setColor(Color.BLACK);
-          g.drawString(world[i][j], j*GridToScreenRatio, i*GridToScreenRatio + 20);
-          g.drawRect(j*GridToScreenRatio, i*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
-        }
+      
+      for(int i = 0; i<world[0].length;i=i+1) { 
+          for(int j = 0; j<world.length;j=j+1) { 
+              
+              if (world[i][j].equals("Wolf")) {    //This block can be changed to match character-color pairs
+                  g.setColor(Color.RED);
+              } else if (world[i][j].equals("Sheep")) {
+                  g.setColor(Color.BLUE);
+              } else if (world[i][j].equals("Grass")) {
+                  g.setColor(Color.GREEN);
+              } else {
+                  g.setColor(Color.WHITE);
+              }
+              
+              g.fillRect(j*GridToScreenRatio, i*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
+              g.setColor(Color.BLACK);
+              g.drawString(world[i][j], j*GridToScreenRatio, i*GridToScreenRatio + 20);
+              g.drawRect(j*GridToScreenRatio, i*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
+          }
       }
+      
+      //g.fillRect(mX, mY, 100, 100);
     }
+    
+     public void mousePressed(MouseEvent e) {
+       System.out.println("Mouse pressed; # of clicks: "
+                    + e.getClickCount());
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        System.out.println("Mouse released; # of clicks: "
+                    + e.getClickCount());
+    }
+
+    public void mouseEntered(MouseEvent e) {
+        System.out.println("Mouse entered");
+    }
+
+    public void mouseExited(MouseEvent e) {
+        System.out.println("Mouse exited");
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("Mouse clicked (# of clicks: "
+                    + e.getClickCount() + ")");
+        mX = e.getX();
+        mY = e.getY();
+        System.out.println(mX + " " + mY);
+    }
+    
   }//end of GridAreaPanel
   
 } //end of DisplayGrid
