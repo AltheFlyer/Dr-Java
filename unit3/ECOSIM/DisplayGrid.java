@@ -56,17 +56,18 @@ class DisplayGrid {
         for(int j = 0; j<world.length;j=j+1) 
         { 
           
-          if (world[i][j].equals("1"))    //This block can be changed to match character-color pairs
+          if (world[i][j].equals("Wolf"))    //This block can be changed to match character-color pairs
             g.setColor(Color.RED);
-          else if (world[i][j].equals("2"))
+          else if (world[i][j].equals("Sheep"))
             g.setColor(Color.BLUE);
-          else if (world[i][j].equals("3"))
+          else if (world[i][j].equals("Grass"))
             g.setColor(Color.GREEN);
           else
             g.setColor(Color.WHITE);
           
           g.fillRect(j*GridToScreenRatio, i*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
           g.setColor(Color.BLACK);
+          g.drawString(world[i][j], j*GridToScreenRatio, i*GridToScreenRatio + 20);
           g.drawRect(j*GridToScreenRatio, i*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
         }
       }

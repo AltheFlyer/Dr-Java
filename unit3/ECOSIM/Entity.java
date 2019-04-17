@@ -1,11 +1,17 @@
 abstract public class Entity {
     
     private int health;
+    private int maxHealth = 40;
+    
+    private int age;
+    private int maxAge;
+    
     private int x, y;
     private boolean canMove;
-    Map world;
     
-    public Entity(int x, int y, Map w) {
+    World world;
+    
+    public Entity(int x, int y, World w) {
         health = 40;
         world = w;
         this.x = x;
@@ -46,6 +52,9 @@ abstract public class Entity {
     
     public void modHealth(int modifier) {
         health += modifier;
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
     }
     
     public boolean hasMoved() {
@@ -57,5 +66,13 @@ abstract public class Entity {
     }
     public void exhaustMove() {
         canMove = false;
+    }
+    
+    public int getX() {
+        return x;
+    }
+    
+    public int getY() {
+        return y;
     }
 }

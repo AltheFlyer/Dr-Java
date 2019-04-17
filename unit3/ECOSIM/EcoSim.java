@@ -2,7 +2,7 @@ public class EcoSim {
     
  
     public static void main(String[] args) {
-        Map map = new Map();
+        World map = new World();
         String[][] stringMap = map.getStringArray();
        
         //Set up Grid Panel
@@ -25,6 +25,7 @@ public class EcoSim {
                 System.out.println();
             }
             */
+            
             
             //Display the grid on a Panel
             grid.refresh(stringMap);            

@@ -1,6 +1,10 @@
 public class Sheep extends Entity {
     
-    public Sheep(int x, int y, Map w) {
+    public Sheep(World w) {
+        super(0, 0, w);
+    }
+    
+    public Sheep(int x, int y, World w) {
         super(x, y, w);
     }
     
@@ -11,20 +15,27 @@ public class Sheep extends Entity {
     }
     
     //Returns whether movement is made
+    /**
+     * 
+     * @return boolean whether movement is made after the interaction
+     */
     public boolean interact(Entity e) {
         if (e instanceof Sheep) {
             //Mating
             if (getHealth() > 20 && e.getHealth() > 20) {
-                world.addSheepTick();
+                world.addEntity(new Sheep(world), getX(), getY(), 1);
+                
                 this.modHealth(-10);
                 e.modHealth(-10);
-                System.out.println("Mating");
+                //System.out.println("Mating");
+                
+                
             }
             //No movement occurs regardless
             return false;
         } else if (e instanceof Grass) {
             modHealth(e.getHealth());
-            System.out.println("Grass Eaten");
+            //System.out.println("Grass Eaten");
             //We don't touch the grass entity, since the sheep's movement will delete it anyways
             return true;
         }
@@ -38,6 +49,6 @@ public class Sheep extends Entity {
     }
     
     public String getEntityType() {
-        return "2";
+        return "Sheep";
     }
 }

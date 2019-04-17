@@ -1,6 +1,6 @@
 public class Grass extends Entity {
     
-    public Grass(int x, int y, Map w) {
+    public Grass(int x, int y, World w) {
         super(x, y, w);
     }
     
@@ -14,6 +14,6 @@ public class Grass extends Entity {
     }
     
     public String getEntityType() {
-        return "3";
+        return "Grass";
     }
 }

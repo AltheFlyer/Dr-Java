@@ -1,6 +1,6 @@
 public class Wolf extends Entity implements Comparable<Wolf> {
     
-    public Wolf(int x, int y, Map w) {
+    public Wolf(int x, int y, World w) {
         super(x, y, w);
     }
     
@@ -13,13 +13,13 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     public boolean interact(Entity e) {
         if (e instanceof Sheep) {
             //CONSUME
-            System.out.println("CONSUME");
+            //System.out.println("CONSUME");
             modHealth(e.getHealth());
             //Movement will naturally destroy the sheep
             return true;
         } else if (e instanceof Wolf) {
             //Survival of the fittest
-            System.out.println("SURVIVAL OF THE FITTEST");
+            //System.out.println("SURVIVAL OF THE FITTEST");
             if (compareTo((Wolf)(e)) < 0) {
                 e.modHealth(-10);
             } else if (compareTo((Wolf)(e)) > 0) {
@@ -27,7 +27,7 @@ public class Wolf extends Entity implements Comparable<Wolf> {
             }
             return false;
         } else if (e instanceof Grass) {
-            System.out.println("Rip grass");
+            //System.out.println("Rip grass");
             //Tramples grass, ruining economy
             return true;
         }
@@ -42,7 +42,7 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     }
     
     public String getEntityType() {
-        return "1";
+        return "Wolf";
     }
     
     public int compareTo(Wolf w) {
