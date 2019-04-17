@@ -5,19 +5,19 @@
  * @since April 5, 2019
  * The base class for a simple bank account
  */
-abstract public class BankAccount {
+abstract public class BankAccount implements Comparable<BankAccount> {
 
     private double balance;
     private final int ID;
     
     BankAccount(int id) {
-        balance = 0;
-        ID = id;
+        this.balance = 0;
+        this.ID = id;
     }
     
     BankAccount(int id, double balance) {
         this.balance = balance;
-        ID = id;
+        this.ID = id;
     }
     
     /**
@@ -27,7 +27,7 @@ abstract public class BankAccount {
      */
     public boolean deposit(double amount) {
         if (amount > 0) {
-            balance += amount;
+            this.balance += amount;
             return true;
         }
         return false;
@@ -39,11 +39,11 @@ abstract public class BankAccount {
      * @return boolean, whether the transaction was successful or not
      */
     public boolean withdraw(double amount) {
-        if (balance >= amount) {
-            balance -= amount;
+        if (this.balance >= amount) {
+            this.balance -= amount;
             return true;
         }
-        balance -= amount;
+        this.balance -= amount;
         return false;
     }
     
@@ -55,7 +55,22 @@ abstract public class BankAccount {
         return balance;
     }
       
+    /**
+     * getID
+     * @return int, the id of the bank account
+     */
     public int getID() {
         return ID;
+    }
+    
+    /**
+     * compareTo
+     * compares the balances between two accounts
+     * @param account the account to compare to
+     * @return int the difference in balance, positive if the checked account has a higher balance,
+     * negative if the checked account has a lower balance
+     */
+    public int compareTo(BankAccount account) {
+        return (int) (100 * (this.getBalance() - account.getBalance()));
     }
 }

@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * AccountManager.java
  * @version 1.0
@@ -5,10 +7,15 @@
  * @since April 10, 2019
  * Manages accounts in a bank
  */
+
 class AccountManager {
  
+    //The array of bank accounts, either checking or savings
+    //Should remain sorted by ID
     private BankAccount[] accounts;
+    //The ID of the next account
     private int counterID;
+    //The number of accounts in the bank
     private int numAccounts;
         
     AccountManager() {
@@ -17,8 +24,12 @@ class AccountManager {
         numAccounts = 0;
     }
     
-    void printAllAccounts() {
-        for (int i = 0; i < accounts.length; ++i) {
+    /**
+     * printAllAccounts
+     * Prints all bank accounts to console, showing ID, and balance
+     */
+    public void printAllAccounts() {
+        for (int i = 0; i < numAccounts; ++i) {
             if (accounts[i] != null) {
                 System.out.printf("ID: %d, Total: %.2f\n", accounts[i].getID() ,accounts[i].getBalance());
             } else {
@@ -27,70 +38,126 @@ class AccountManager {
         }
     }
     
-    boolean createCheckingAccount() {
+    /**
+     * createCheckingAccount
+     * Creates a checking account if there is space for one
+     * @return boolean whether an account was successfully created
+     */
+    public boolean createCheckingAccount() {
         return createAccount(new CheckingAccount(generateNewID()));
     }
     
-    boolean createCheckingAccount(double balance) {
+    /**
+     * createCheckingAccount
+     * Creates a checking account if there is space for one
+     * @param balance the starting balance in the account
+     * @return boolean whether an account was successfully created
+     */
+    public boolean createCheckingAccount(double balance) {
         return createAccount(new CheckingAccount(generateNewID(), balance));
     }
     
-    boolean createSavingsAccount() {
+    /**
+     * createSavingsAccount
+     * Creates a savings account if there is space for one
+     * @return boolean whether an account was successfully created
+     */
+    public boolean createSavingsAccount() {
         return createAccount(new SavingsAccount(generateNewID()));
     }
     
-    boolean createSavingsAccount(double balance, double rate) {
+    /**
+     * createSavingsAccount
+     * Creates a savings account if there is space for one
+     * @param balance the starting balance in the account
+     * @param rate the interest rate on the account
+     * @return boolean whether an account was successfully created
+     */
+    public boolean createSavingsAccount(double balance, double rate) {
         return createAccount(new SavingsAccount(generateNewID(), balance, rate));
     }
     
-    
-    private boolean createAccount(BankAccount b) {
-        for (int i = 0; i < accounts.length; ++i) {
-            if (accounts[i] == null) {
-                accounts[i] = b;
-                numAccounts++;
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    boolean deleteAccount(int id) {
-        int j = this.binarySearch(id, 0, numAccounts - 1);
-        if (accounts[j] != null && accounts[j].getID() == id) {
-            accounts[id] = null;
-            //Shift everything down
-            for (int i = j + 1; i < accounts.length; ++i) {
-                accounts[i - 1] = accounts[i];
-                if (accounts[i] == null) {
-                    numAccounts--;
-                    return true;
-                }
-            }
-            accounts[accounts.length - 1] = null;
-            numAccounts--;
+    /**
+     * createAccount
+     * Generic account creation method
+     * @param account the account to add to the bank
+     * @return boolean whether the operation was succesful or not
+     */
+    private boolean createAccount(BankAccount account) {
+        if (numAccounts < accounts.length) {
+            accounts[numAccounts] = account;
+            numAccounts++;
             return true;
         }
+        //If there is no space in the bank
+        counterID--;
         return false;
+    }
+    
+    /**
+     * deleteAccount
+     * Deletes an account based on id
+     * @param id the ID of the account to delete
+     * @return whether the operation was successful or not (if the id exists)
+     */
+    public boolean deleteAccount(int id) {
+        //Get index by id
+        int index = this.binarySearch(id, 0, numAccounts - 1);
+        //If the account with the id doesn't exist, operation fails
+        if (index == -1) {
+            return false;
+        }
+        
+        //Deletes account by dereferencing
+        accounts[index] = null;
+        //Shift everything down to maintain order by ID
+        for (int i = index + 1; i < numAccounts; ++i) {
+            accounts[i - 1] = accounts[i];
+        }
+        accounts[accounts.length - 1] = null;
+        numAccounts--;
+        return true;
     }
         
-     
-    
-    boolean deposit(int index, double amount) {
-        if (accounts[index] != null) {
-            return accounts[index].deposit(amount);
+    /**
+     * deposit
+     * Adds money to the account with the given id
+     * @param id the id of the account to deposit in 
+     * @param amount the amount of money to deposit
+     * @return boolean whether the operation was successful or not
+     */
+    public boolean deposit(int id, double amount) {
+        int index = this.binarySearch(id, 0, numAccounts - 1);
+        if (index == -1) {
+            return false;
         }
-        return false;
+        
+        return accounts[index].deposit(amount);
     }
     
-    boolean withdraw(int index, double amount) {
-        if (accounts[index] != null) {
-            return accounts[index].withdraw(amount);
+    /**
+     * withdraw
+     * Withdraws money from the account with the given id
+     * @param id the id of the account to deposit in 
+     * @param amount the amount of money to withdraw
+     * @return boolean whether the operation was successful or not
+     */
+    public boolean withdraw(int id, double amount) {
+        //Get the account index by id
+        int index = this.binarySearch(id, 0, numAccounts - 1);
+        //If id doesn't exist, operation fails
+        if (index == -1) {
+            return false;
         }
-        return false;
+        
+        return accounts[index].withdraw(amount);
     }
     
-    void addInterest() {
+    /**
+     * addInterest
+     * adds interest to all savings accounts in the bank
+     */
+    public void addInterest() {
         for (int i = 0; i < accounts.length; ++i) {
             if (accounts[i] instanceof SavingsAccount) {
                 ((SavingsAccount) accounts[i]).addInterest();
@@ -98,28 +165,47 @@ class AccountManager {
         }
     }
     
-    double totalMoney() {
+    /**
+     * totalMoney
+     * counts the total amount of money in the bank
+     * @return double The amount of money in the entire bank
+     */
+    public double totalMoney() {
         double total = 0;
-        for (int i = 0; i < accounts.length; ++i) {
-            if (accounts[i] != null) {
-                total += accounts[i].getBalance();
-            } else {
-                return total;
-            }
+        for (int i = 0; i < numAccounts; ++i) {
+            total += accounts[i].getBalance();            
         }
         return total;
     }
     
+    /**
+     * generateNewID
+     * generates the ID for the next bank account in the bank
+     * @return int the new ID to use
+     */
     private int generateNewID() {
         counterID++;
         return counterID;
     }
     
-    public int binarySearch(int value, int low, int high) {
+    /**
+     * binarySearch
+     * recursively searches for the index of the account within the accounts array, given an ID
+     * @param id the ID of the account to search for
+     * @param low the lowest bound of the array range to search in
+     * @param high the highest bound of the array range to search in
+     * @return int the index of the account with the given id, returns -1 if no such account
+     */
+    private int binarySearch(int id, int low, int high) {
+        //If something somehow breaks along the way (no bank accounts)
+        if (high < low) {
+            return -1;
+        }
+        //When there are only 1 or 2 values to compare, do a straight comparison
         if (low == high || low == high - 1) {
-            if (accounts[low].getID() == value) {
+            if (accounts[low].getID() == id) {
                 return low;
-            } else if (accounts[high].getID() == value){
+            } else if (accounts[high].getID() == id){
                 return high;
             } else {
                 return -1;
@@ -127,13 +213,28 @@ class AccountManager {
         }
         
         int pivot = (low + high) / 2;
-        if (accounts[pivot].getID() == value) {
+        System.out.println(low + " " + high);
+        if (accounts[pivot].getID() == id) {
             return pivot;
         }
-        if (accounts[pivot].getID() > value) {
-            return binarySearch(value, low, pivot);
+        if (accounts[pivot].getID() > id) {
+            return binarySearch(id, low, pivot);
         } else {
-            return binarySearch(value, pivot, high);
+            return binarySearch(id, pivot, high);
         }
+    }
+    
+    /**
+     * getAccountsByBalance
+     * @return BankAccount[] The array of bank accounts, sorted by balance
+     */
+    public BankAccount[] getAccountsByBalance() {
+        BankAccount[] pushAccs = new BankAccount[numAccounts];
+        for (int i = 0; i < numAccounts; ++i) {
+            pushAccs[i] = accounts[i];
+        }
+        Arrays.sort(pushAccs);
+        
+        return pushAccs;
     }
 }
