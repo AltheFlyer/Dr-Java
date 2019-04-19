@@ -91,4 +91,8 @@ abstract public class Entity {
     public String buildGenome() {
         return "";
     }
+    
+    public String toString() {
+        return String.format("%d/%d health, %d/%d age", health, maxHealth, age, maxAge);
+    }
 }

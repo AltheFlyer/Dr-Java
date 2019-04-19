@@ -8,6 +8,8 @@ public class World {
     private int numWolves;
     private int numGrass;
     private double plantRate;
+    private int width;
+    private int height;
     
     public World() {
         map = new Entity[5][5];
@@ -38,6 +40,8 @@ public class World {
     public World(int width, int height, double plantChance, double sheepChance, double wolfChance, 
                  double plantRate) {
         map = new Entity[height][width];
+        this.width = width;
+        this.height = height;
         this.plantRate = plantRate;
        
         numSheep = 0;
@@ -256,5 +260,20 @@ public class World {
     
     public int getNumWolves() {
         return numWolves;
+    }
+    
+    public int getWidth() {
+        return width;
+    }
+    
+    public int getHeight() {
+        return height;
+    }
+    
+    public String getEntityString(int x, int y) {
+        if (map[x][y] == null) {
+            return "";
+        }
+        return map[x][y].getEntityType();
     }
 }

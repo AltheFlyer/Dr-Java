@@ -33,12 +33,12 @@ public class EcoSim {
         String[][] stringMap = map.getStringArray();
        
         //Set up Grid Panel
-        DisplayGrid grid = new DisplayGrid(stringMap);
+        DisplayGrid grid = new DisplayGrid(map);
         
         int i = 0;
         while(true) {
             //Display the grid on a Panel
-            grid.refresh(stringMap);  
+            grid.refresh();  
             i++;
             
             //System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
@@ -65,7 +65,7 @@ public class EcoSim {
             };
             
             map.tick();
-            stringMap = map.getStringArray();
+            //stringMap = map.getStringArray();
            
         }
     

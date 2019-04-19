@@ -23,16 +23,16 @@ class DisplayGrid {
 
   private JFrame frame;
   private int maxX,maxY, GridToScreenRatio;
-  private String[][] world;
+  private World world;
   
-  DisplayGrid(String[][] w) { 
+  DisplayGrid(World w) { 
     this.world = w;
     
     maxX = Toolkit.getDefaultToolkit().getScreenSize().width;
     maxY = Toolkit.getDefaultToolkit().getScreenSize().height;
-    GridToScreenRatio = maxY / (world.length+1);  //ratio to fit in screen as square map
+    GridToScreenRatio = maxY / (world.getWidth()+1);  //ratio to fit in screen as square map
     
-    System.out.println("Map size: "+world.length+" by "+world[0].length + "\nScreen size: "+ maxX +"x"+maxY+ " Ratio: " + GridToScreenRatio);
+    System.out.println("Map size: "+world.getWidth() +" by "+world.getHeight() + "\nScreen size: "+ maxX +"x"+maxY+ " Ratio: " + GridToScreenRatio);
     
     this.frame = new JFrame("Map of World");
     
@@ -49,8 +49,8 @@ class DisplayGrid {
     frame.repaint();
   }
   
-  public void refresh(String[][] grid) {
-      world = grid;
+  public void refresh(World w) {
+      world = w;
       frame.repaint();
   }
       
@@ -58,6 +58,9 @@ class DisplayGrid {
       
     int mX = 0;
     int mY = 0;
+    
+    int selectedX = 0;
+    int selectedY = 0;
     
     public GridAreaPanel() {
         addMouseListener(this);
@@ -70,14 +73,15 @@ class DisplayGrid {
       g.setColor(Color.BLACK);
       
       
-      for(int i = 0; i<world[0].length;i=i+1) { 
-          for(int j = 0; j<world.length;j=j+1) { 
+      for(int i = 0; i<world.getWidth();i=i+1) { 
+          for(int j = 0; j<world.getHeight();j=j+1) { 
+              String type = world.getEntityString(i, j);
               
-              if (world[i][j].equals("Wolf")) {    //This block can be changed to match character-color pairs
+              if (type.equals("Wolf")) {    //This block can be changed to match character-color pairs
                   g.setColor(Color.RED);
-              } else if (world[i][j].equals("Sheep")) {
+              } else if (type.equals("Sheep")) {
                   g.setColor(Color.BLUE);
-              } else if (world[i][j].equals("Grass")) {
+              } else if (type.equals("Grass")) {
                   g.setColor(Color.GREEN);
               } else {
                   g.setColor(Color.WHITE);
@@ -85,9 +89,14 @@ class DisplayGrid {
               
               g.fillRect(i*GridToScreenRatio, j*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
               g.setColor(Color.BLACK);
-              g.drawString(world[i][j], i*GridToScreenRatio, (j + 1)*GridToScreenRatio);
+              g.drawString(type, i*GridToScreenRatio, (j + 1)*GridToScreenRatio);
               g.drawRect(i*GridToScreenRatio, j*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
           }
+      }
+      
+      g.drawRect(selectedX * GridToScreenRatio + 1, selectedY * GridToScreenRatio + 1, GridToScreenRatio - 1, GridToScreenRatio - 1);
+      if (world.hasEntity(selectedX, selectedY)) {
+          g.drawString(world.getEntityAt(selectedX, selectedY).toString(), 700, 200);
       }
       
       //g.fillRect(mX, mY, 100, 100);
@@ -116,7 +125,11 @@ class DisplayGrid {
                     + e.getClickCount() + ")");
         mX = e.getX();
         mY = e.getY();
-        System.out.println(mX + " " + mY);
+        selectedX = mX / GridToScreenRatio;
+        selectedY = mY / GridToScreenRatio;
+        System.out.println(selectedX + " " + selectedY);
+        
+        
     }
     
   }//end of GridAreaPanel
