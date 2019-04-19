@@ -1,12 +1,20 @@
 abstract public class Entity {
     
+    //Stats
     private int health;
-    private int maxHealth = 40;
-    
     private int age;
-    private int maxAge = 20;
     
-    private int x, y;
+    //
+    private int adultThreshold;
+    
+    //Genetics
+    private boolean isMale;
+    private int visionRange;
+    private int maxAge = 300;
+    private int maxHealth = 200;
+    
+    //World interaction values
+    private int x, y;    
     private boolean canMove;
     
     World world;
@@ -78,5 +86,9 @@ abstract public class Entity {
     
     public int getY() {
         return y;
+    }
+    
+    public String buildGenome() {
+        return "";
     }
 }

@@ -1,42 +1,73 @@
+import java.util.Scanner;
+
 public class EcoSim {
     
- 
+    /* MOST STABLE:
+     * 280 Turns, 0.4, 0.4, 0.01, 0.01
+     * 295 Truns, 0.4, 0.1, 0.01, 0.01
+     * 398 Turns, 0.5, 0.1, 0.01, 0.01
+     * No Wolf Hunger
+     * 0.5, 0.1, 0.01, 0.01
+     */
+    
     public static void main(String[] args) {
-        World map = new World();
+        Scanner input = new Scanner(System.in);
+        //for (int i = 0; i < 32; ++i) {
+        //System.out.println(Genetics.intToBasePair(i, 4));
+        //}
+        
+        System.out.println("Enter the plant spawn chance (decimal)");
+        double pSpawn = input.nextDouble();
+        System.out.println("Enter the sheep spawn chance (decimal)");
+        double sSpawn = input.nextDouble();
+        System.out.println("Enter the wolf spawn chance (decimal)");
+        double wSpawn = input.nextDouble();
+        
+        System.out.println("Enter the plant growth rate");
+        double plantRate = input.nextDouble();
+        
+        //World map = new World(25, 25, pSpawn, sSpawn, wSpawn, plantRate);
+        
+        World map = new World(25, 25, pSpawn, sSpawn, wSpawn, plantRate);
+        
         String[][] stringMap = map.getStringArray();
        
         //Set up Grid Panel
         DisplayGrid grid = new DisplayGrid(stringMap);
         
+        int i = 0;
         while(true) {
-            map.tick();
-            stringMap = map.getStringArray();
-            
-            /*
-            for (int y = 0; y < stringMap.length; ++y) {
-                for (int x = 0; x < stringMap[0].length; ++x) {
-                    if (map.hasEntity(x, y)) {
-                        System.out.print(map.map[y][x].getHealth());
-                    } else {
-                        System.out.print("N");
-                    }
-                    System.out.print(" ");
-                }
-                System.out.println();
-            }
-            */
-            
-            
             //Display the grid on a Panel
-            grid.refresh(stringMap);            
+            grid.refresh(stringMap);  
+            i++;
+            
+            //System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
+            
+            if (map.getNumSheep() <= 0) {
+                System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
+            
+                System.out.println("Sheep Extinction");
+                return;
+            }
+            
+            if (map.getNumWolves() <= 0) {
+                System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
+            
+                System.out.println("Wolf Extinction");
+                return;
+            }
             
             //Small delay
             try { 
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch(Exception e) {
-                
+                e.printStackTrace();
             };
             
+            map.tick();
+            stringMap = map.getStringArray();
+           
         }
+    
     }
 }

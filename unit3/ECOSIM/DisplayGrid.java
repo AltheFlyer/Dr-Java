@@ -5,8 +5,16 @@
  */
 
 // Graphics Imports
-import javax.swing.*;
-import java.awt.*;
+//import javax.swing.*;
+//import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import java.awt.Toolkit;
+import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -75,10 +83,10 @@ class DisplayGrid {
                   g.setColor(Color.WHITE);
               }
               
-              g.fillRect(j*GridToScreenRatio, i*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
+              g.fillRect(i*GridToScreenRatio, j*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
               g.setColor(Color.BLACK);
-              g.drawString(world[i][j], j*GridToScreenRatio, i*GridToScreenRatio + 20);
-              g.drawRect(j*GridToScreenRatio, i*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
+              g.drawString(world[i][j], i*GridToScreenRatio, (j + 1)*GridToScreenRatio);
+              g.drawRect(i*GridToScreenRatio, j*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
           }
       }
       

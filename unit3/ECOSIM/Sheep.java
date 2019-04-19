@@ -9,9 +9,32 @@ public class Sheep extends Entity {
     }
     
     public int move() {
+        
+        int maxValue = 0;
+        int move = 0;
+        //Up, Right, Down, Left
+        int[] xMoves = {0, 1, 0, -1};
+        int[] yMoves = {-1, 0, 1, 0};
+        for (int i = 0; i < 4; ++i) {
+            if (world.tileExists(getX() + xMoves[i], getY() + yMoves[i]) && world.getEntityAt(getX() + xMoves[i], getY() + yMoves[i]) instanceof Grass) {
+                if (world.getEntityAt(getX() + xMoves[i], getY() + yMoves[i]).getHealth() > maxValue) {
+                    maxValue = world.getEntityAt(getX() + xMoves[i], getY() + yMoves[i]).getHealth();
+                    move = i + 1;
+                }
+                //System.out.println("GRASS");
+            }
+        }
+        if (maxValue != 0) {
+            return move;
+        }
+        
         int r = randint(0, 5);
         //None, Up, Right, Down, Left = {0, 1, 2, 3, 4}
         return r;
+        
+        //One turn AI
+        
+        
     }
     
     //Returns whether movement is made
@@ -41,6 +64,10 @@ public class Sheep extends Entity {
         }
         //If theres a wolf or something, we block movement
         return false;
+    }
+    
+    public String buildGenome() {
+        return "";
     }
     
     public void tick() {

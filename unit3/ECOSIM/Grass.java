@@ -5,6 +5,7 @@ public class Grass extends Entity {
     }
     
     public int move() {
+        //Grass can't really move here
         return 0;
     }
     
