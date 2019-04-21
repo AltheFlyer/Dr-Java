@@ -4,14 +4,14 @@ abstract public class Entity {
     private int health;
     private int age;
     
-    //
+    //When an animal is considered an adult
     private int adultThreshold;
     
     //Genetics
     private boolean isMale;
     private int visionRange;
-    private int maxAge = 300;
-    private int maxHealth = 200;
+    private int maxAge;
+    private int maxHealth;
     
     //World interaction values
     private int x, y;    
@@ -26,6 +26,13 @@ abstract public class Entity {
         this.y = y;
         canMove = true;
         age = 0;
+        if (Math.random() < 0.5) {
+            isMale = true;
+        } else {
+            isMale = false;
+        }
+        maxHealth = 200;
+        maxAge = 300;
     }
     
     public int move() {
@@ -93,6 +100,7 @@ abstract public class Entity {
     }
     
     public String toString() {
-        return String.format("%d/%d health, %d/%d age", health, maxHealth, age, maxAge);
+        return String.format("%d/%d health, %d/%d age, Male? %s", health, maxHealth, age, maxAge, isMale);
     }
+    
 }

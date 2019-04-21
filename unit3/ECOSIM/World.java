@@ -11,6 +11,10 @@ public class World {
     private int width;
     private int height;
     
+    //For special selections
+    private int activeX;
+    private int activeY;
+    
     public World() {
         map = new Entity[5][5];
         /*
@@ -43,6 +47,9 @@ public class World {
         this.width = width;
         this.height = height;
         this.plantRate = plantRate;
+        
+        activeX = 0;
+        activeY = 0;
        
         numSheep = 0;
         numWolves = 0;
@@ -100,11 +107,17 @@ public class World {
                                     map[newX][newY] = map[x][y];
                                     map[x][y] = null;
                                     map[newX][newY].setPos(newX, newY);
+                                    if (x == activeX && y == activeY) {
+                                        setActiveTile(newX, newY);
+                                    }
                                 }
                             } else if (tileExists(newX, newY)){
                                 map[newX][newY] = map[x][y];
                                 map[x][y] = null;
                                 map[newX][newY].setPos(newX, newY);
+                                if (x == activeX && y == activeY) {
+                                    setActiveTile(newX, newY);
+                                }
                             }
                             
                         }
@@ -203,6 +216,10 @@ public class World {
             
             //System.out.printf("%d\n", visited[checkY][checkX]);
             //System.out.println(visited[checkY][checkX] < range);
+            //If Valid/Open square
+            if (map[checkX][checkY] == null) {
+                return coordToInt(checkX, checkY);
+            }
             
             if (visited[checkX][checkY] < range) {
                 //Add some tiles
@@ -226,12 +243,7 @@ public class World {
                     visited[checkX][checkY - 1] = visited[checkX][checkY] + 1;
                 }                
             }
-            
-            //If Valid/Open square
-            if (map[checkX][checkY] == null) {
-                return coordToInt(checkX, checkY);
-            }
-            
+
             visited[checkX][checkY] = -1;
         }
         
@@ -275,5 +287,18 @@ public class World {
             return "";
         }
         return map[x][y].getEntityType();
+    }
+    
+    public void setActiveTile(int x, int y) {
+        activeX = x;
+        activeY = y;
+    }
+    
+    public int getActiveX() {
+        return activeX;
+    }
+    
+    public int getActiveY() {
+        return activeY;
     }
 }

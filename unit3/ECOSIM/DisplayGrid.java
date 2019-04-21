@@ -94,9 +94,9 @@ class DisplayGrid {
           }
       }
       
-      g.drawRect(selectedX * GridToScreenRatio + 1, selectedY * GridToScreenRatio + 1, GridToScreenRatio - 1, GridToScreenRatio - 1);
-      if (world.hasEntity(selectedX, selectedY)) {
-          g.drawString(world.getEntityAt(selectedX, selectedY).toString(), 700, 200);
+      g.drawRect(world.getActiveX() * GridToScreenRatio + 3, world.getActiveY() * GridToScreenRatio + 3, GridToScreenRatio - 3, GridToScreenRatio - 3);
+      if (world.hasEntity(world.getActiveX(), world.getActiveY())) {
+          g.drawString(world.getEntityAt(world.getActiveX(), world.getActiveY()).toString(), 900, 200);
       }
       
       //g.fillRect(mX, mY, 100, 100);
@@ -127,9 +127,8 @@ class DisplayGrid {
         mY = e.getY();
         selectedX = mX / GridToScreenRatio;
         selectedY = mY / GridToScreenRatio;
+        world.setActiveTile(mX / GridToScreenRatio, mY / GridToScreenRatio);
         System.out.println(selectedX + " " + selectedY);
-        
-        
     }
     
   }//end of GridAreaPanel

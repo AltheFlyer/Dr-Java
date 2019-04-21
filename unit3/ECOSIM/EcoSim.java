@@ -2,13 +2,7 @@ import java.util.Scanner;
 
 public class EcoSim {
     
-    /* MOST STABLE:
-     * 280 Turns, 0.4, 0.4, 0.01, 0.01
-     * 295 Truns, 0.4, 0.1, 0.01, 0.01
-     * 398 Turns, 0.5, 0.1, 0.01, 0.01
-     * No Wolf Hunger
-     * 0.5, 0.1, 0.01, 0.01
-     */
+    
     
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -35,36 +29,48 @@ public class EcoSim {
         //Set up Grid Panel
         DisplayGrid grid = new DisplayGrid(map);
         
+        long lastTurn = System.currentTimeMillis();
+        
         int i = 0;
         while(true) {
             //Display the grid on a Panel
             grid.refresh();  
-            i++;
             
-            //System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
-            
-            if (map.getNumSheep() <= 0) {
-                System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
-            
-                System.out.println("Sheep Extinction");
-                return;
-            }
-            
-            if (map.getNumWolves() <= 0) {
-                System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
-            
-                System.out.println("Wolf Extinction");
-                return;
+            if (System.currentTimeMillis() - lastTurn > 1000) {
+                
+                i++;
+                
+                //System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
+                
+                if (map.getNumSheep() <= 0) {
+                    System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
+                    
+                    System.out.println("Sheep Extinction");
+                    return;
+                }
+                
+                if (map.getNumWolves() <= 0) {
+                    System.out.printf("Turn %d: %d, %d, %d\n", i,  map.getNumGrass(), map.getNumSheep(), map.getNumWolves());
+                    
+                    System.out.println("Wolf Extinction");
+                    return;
+                }
+                
+                map.tick();
+                
+                lastTurn = System.currentTimeMillis();
             }
             
             //Small delay
+            /*
             try { 
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch(Exception e) {
                 e.printStackTrace();
             };
+            */
             
-            map.tick();
+            
             //stringMap = map.getStringArray();
            
         }

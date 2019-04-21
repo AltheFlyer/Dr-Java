@@ -48,9 +48,9 @@ public class Wolf extends Entity implements Comparable<Wolf> {
             //Survival of the fittest, wolves will attack if it's advantageous
             //System.out.println("SURVIVAL OF THE FITTEST");
             if (diff < -10/*0*/) {
-                e.modHealth(-10);
-            } else if (diff > 10/*0*/) {
                 this.modHealth(-10);
+            } else if (diff > 10/*0*/) {
+                e.modHealth(-10);
             }
             if (getHealth() > 20 && e.getHealth() > 20) {
                 world.addEntity(new Wolf(world), getX(), getY(), 1);
@@ -82,6 +82,6 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     }
     
     public int compareTo(Wolf w) {
-        return w.getHealth() - this.getHealth();
+        return this.getHealth() - w.getHealth();
     }
 }
