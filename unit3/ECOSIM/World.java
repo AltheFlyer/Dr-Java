@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 
+/**
+ * [World.java]
+ * @version 1.6
+ * @author Allen Liu
+ * @since April 26, 2019
+ * A world object that can contain and control various entities
+ */
 public class World {
     
     private Entity[][] map;
@@ -12,35 +19,35 @@ public class World {
     private int height;
     
     //For special selections
-    private int activeX;
-    private int activeY;
+    //private int activeX;
+    //private int activeY;
     
     public World() {
         map = new Entity[5][5];
-        /*
-        map[0][0] = new Sheep(0, 0, this);
-        map[0][1] = new Wolf(0, 1, this);
+        this.width = 5;
+        this.height = 5;
+        this.plantRate = 0.05;
         
-        map[2][0] = new Wolf(2, 0, this);
-        map[2][1] = new Sheep(2, 1, this);
+        //activeX = 0;
+        //activeY = 0;
+       
+        numSheep = 10;
+        numWolves = 10;
+        numGrass = 10;
         
-        map[0][4] = new Sheep(0, 4, this);
-        map[1][4] = new Wolf(1, 4, this);
-        
-        map[4][4] = new Sheep(4, 4, this);
-        map[3][4] = new Wolf(3, 4, this);
-        
-        */
-        //map[3][3] = new Sheep(3, 3, this);
-        //map[2][3] = new Grass(2, 3, this);
-        //map[4][3] = new Grass(4, 3, this);
-        //map[4][3].modHealth(20);
-        
-        
-        plantRate = 0;
+        map[2][2] = new Sheep(2, 2, this, Genetics.maleChromosome + "AAAAAAAAAAAAAAA",
+                                          Genetics.maleChromosome + "CCCCCCCCCCCTTTT");
+        map[2][3] = new Wolf(2, 3, this, Genetics.femaleChromosome + "AAAAAAAAAAAAAA", 
+                                          Genetics.femaleChromosome + "TTTTTTTTTTTGGG");
     }
     
-    
+    /**
+     * @param width the width of the world
+     * @param height the height of the world
+     * @param plantChance the chance for a tile to start with a plant
+     * @param sheepChance the chance for a tile to start with a sheep 
+     * @param wolfChance the chance for a tile to start with a wolf
+     */
     public World(int width, int height, double plantChance, double sheepChance, double wolfChance, 
                  double plantRate) {
         map = new Entity[height][width];
@@ -48,8 +55,8 @@ public class World {
         this.height = height;
         this.plantRate = plantRate;
         
-        activeX = 0;
-        activeY = 0;
+        //activeX = 0;
+        //activeY = 0;
        
         numSheep = 0;
         numWolves = 0;
@@ -67,10 +74,12 @@ public class World {
                     map[x][y] = new Grass(x, y, this);
                     numGrass++;
                 } else if (r <= plantChance + sheepChance) {
-                    map[x][y] = new Sheep(x, y, this);
+                    String gender = Genetics.getRandomGender();
+                    map[x][y] = new Sheep(x, y, this, gender);
                     numSheep++;
                 } else if (r <= plantChance + sheepChance + wolfChance) {
-                    map[x][y] = new Wolf(x, y, this);
+                    String gender = Genetics.getRandomGender();
+                    map[x][y] = new Wolf(x, y, this, gender);
                     numWolves++;
                 } else {
                     map[x][y] = null;
@@ -79,6 +88,11 @@ public class World {
         }
     }
     
+    /**
+     * [tick]
+     * runs world actions like entity movements, and other misc. operations
+     * like entity counting and death checks
+     */
     public void tick() { 
         numSheep = 0;
         numWolves = 0;
@@ -88,6 +102,7 @@ public class World {
                 if (map[x][y] != null) {
                     if (!map[x][y].hasMoved()) {
                         map[x][y].exhaustMove();
+                        //Get a movement integer as an action
                         int action = map[x][y].move();
                         int newX = x;
                         int newY = y;
@@ -103,21 +118,34 @@ public class World {
                         
                         if (action > 0) {
                             if (hasEntity(newX, newY)) {
+                                //Force interaction, do additional stuff if interaction allows for movement
                                 if (map[x][y].interact(map[newX][newY])) {
+                                    //Copy by movement, also deleting the entity on the tile to move to
                                     map[newX][newY] = map[x][y];
+                                    //Remove old pointer by dereference
                                     map[x][y] = null;
+                                    //Update position
                                     map[newX][newY].setPos(newX, newY);
+                                    //Update active tile
+                                    /*
                                     if (x == activeX && y == activeY) {
                                         setActiveTile(newX, newY);
                                     }
+                                    */
                                 }
                             } else if (tileExists(newX, newY)){
+                                //Copy by movement
                                 map[newX][newY] = map[x][y];
+                                //Remove old pointer by dereference
                                 map[x][y] = null;
+                                //Update position
                                 map[newX][newY].setPos(newX, newY);
+                                //Move active selector
+                                /*
                                 if (x == activeX && y == activeY) {
                                     setActiveTile(newX, newY);
                                 }
+                                */
                             }
                             
                         }
@@ -135,6 +163,9 @@ public class World {
             for (int y = 0; y < map[0].length; ++y) {
                 if (map[x][y] != null){
                     map[x][y].tick();
+                    if (map[x][y].getX() != x || map[x][y].getY() != y) {
+                        System.out.println("Bad pos");
+                    }
                     if (map[x][y].getHealth() <= 0) {
                         map[x][y] = null;
                     } else {
@@ -151,59 +182,80 @@ public class World {
         }
         
     }
-    
-    public String[][] getStringArray() {
-        String[][] stringMap = new String[map[0].length][map.length];
-        for (int x = 0; x < map.length; ++x) {
-            for (int y = 0; y < map[0].length; ++y) {
-                if (map[x][y] != null) {
-                    stringMap[x][y] = map[x][y].getEntityType();
-                } else {
-                    stringMap[x][y] = "0";
-                }
-            }
-        }
-        return stringMap;
-    }
-    
+
     /**
-     * 
-     * Bottom Inclusive
+     * [randint]
+     * Generates a random integer, inclusive of the lower bound, 
+     * but exclusive of the higher bound
+     * @param low the lower bound of the generator
+     * @param the higher bound of the generator, not included in generation
+     * @return int, the randomly generated integer
      */
-    private int randint(int low, int high) {
+    public static int randint(int low, int high) {
         return (int) (low + Math.random() * (high - low));
     }
     
+    /**
+     * [tileExists]
+     * checks if a tile with the given coordinates (x, y) exists in the map
+     * @return boolean, whether the coordinates are for a valid tile or not
+     */
     public boolean tileExists(int x, int y) {
         return (x >= 0) && (x < map[0].length) && (y >= 0) && (y < map.length);
     }
     
+    /**
+     * [hasEntity]
+     * checks if the specified tile has an entity,
+     * a more readable way of checking if != null
+     * @return boolean, whether there is an entity at the specified tile or not
+     */
     public boolean hasEntity(int x, int y) {
-        return tileExists(x, y) && (map[x][y] != null);
+        return this.tileExists(x, y) && (this.map[x][y] != null);
     }
     
+    /**
+     * [getEntityAt]
+     * gets the entity at the specified (x, y) coordinates
+     * @param x the x coordinate of the tile to get the entity from
+     * @param y the y coordinate of the tile to get the entity from
+     * @return Entity, the entity at the (x, y) tile specified
+     */
     public Entity getEntityAt(int x, int y) {
-        return map[x][y];
+        return this.map[x][y];
     }
     
+    /**
+     * [addEntity]
+     * adds an entity to a tile in the world, or the nearest unoccupied tile if there is an entity at that tile
+     * @param e the entity to add to the world
+     * @param x the x position of the tile to add the entity to/around
+     * @param y the y position of the tile to add the entity to/around
+     * @param range the maximum range to search for entity addition to around the (x, y) position
+     */
     public void addEntity(Entity e, int x, int y, int range) {
         int tilePosition = getClosestOpenTile(x, y, range);
         if (tilePosition > -1) {
-            e.setPos(intToX(tilePosition), intToY(tilePosition));
-            map[intToX(tilePosition)][intToY(tilePosition)] = e;
+            e.setPos(this.intToX(tilePosition), this.intToY(tilePosition));
+            this.map[this.intToX(tilePosition)][this.intToY(tilePosition)] = e;
             
         }
     }
     
     /**
-     * addEntityAroundTile
-     * 
+     * [getClosestOpenTile]
+     * given a tile, finds the nearest tile without an entity using bfs
+     * @param x the x position of the tile to search from
+     * @param y the y position of the tile to search from
+     * @param range the maximum range to search
+     * @return int, the integer representation of the nearest open tile. 
+     * Returns -1 when no valid tiles are in range
      */
     public int getClosestOpenTile(int x, int y, int range) {
         ArrayList<Integer> queue = new ArrayList<Integer>();
-        int[][] visited = new int[map.length][map[0].length];
+        int[][] visited = new int[this.map.length][this.map[0].length];
         
-        queue.add(coordToInt(x, y));
+        queue.add(this.coordToInt(x, y));
         //visited[y][x] = 0;
         
         //System.out.println(range);
@@ -211,20 +263,20 @@ public class World {
         while (!queue.isEmpty()) {
             //System.out.println(queue);
             int currentTile = queue.remove(0);
-            int checkX = intToX(currentTile);
-            int checkY = intToY(currentTile);
+            int checkX = this.intToX(currentTile);
+            int checkY = this.intToY(currentTile);
             
             //System.out.printf("%d\n", visited[checkY][checkX]);
             //System.out.println(visited[checkY][checkX] < range);
             //If Valid/Open square
-            if (map[checkX][checkY] == null) {
-                return coordToInt(checkX, checkY);
+            if (this.map[checkX][checkY] == null) {
+                return this.coordToInt(checkX, checkY);
             }
-            
+
             if (visited[checkX][checkY] < range) {
                 //Add some tiles
                 if (tileExists(checkX + 1, checkY) && visited[checkX + 1][checkY] == 0) {
-                    queue.add(coordToInt(checkX + 1, checkY));
+                    queue.add(this.coordToInt(checkX + 1, checkY));
                     visited[checkX + 1][checkY] = visited[checkX][checkY] + 1;
                 }
                 //Add some tiles
@@ -250,55 +302,128 @@ public class World {
         return -1;
     }
     
-    private int coordToInt(int x, int y) {
-        return x + y * map.length;
+    /**
+     * [coordToInt]
+     * converts a tile's (x, y) coordinate into an integer, for storage in data structures
+     * map/world tiles are ordered in English reading order, left to right in each row, from top to bottom
+     * @param x the x position of the tile
+     * @param y the y position of the tile
+     * @return int, the integer representation of the tile
+     */
+    public int coordToInt(int x, int y) {
+        return x + y * this.map.length;
     }
     
-    private int intToX(int i) {
-        return i % map.length;
+    /**
+     * [intToX]
+     * converts an integer representation of a map tile into its respective x coordinate
+     * @return int, the x coordinate of the specified tile
+     */
+    public int intToX(int i) {
+        return i % this.map.length;
     }
     
-    private int intToY(int i) {
-        return i / map.length;
+    /**
+     * [intToY]
+     * converts an integer representation of a map tile into its respective y coordinate
+     * @return int, the y coordinate of the specified tile
+     */
+    public int intToY(int i) {
+        return i / this.map.length;
     }
     
+    /**
+     * [getNumGrass]
+     * gets the number of tall grass tiles in the world
+     * @return int numGrass, the number of tall grass tiles on the map
+     */
     public int getNumGrass() {
-        return numGrass;
+        return this.numGrass;
     }
     
+    /**
+     * [getNumSheep]
+     * gets the number of sheep in the world
+     * @return int numSheep, the number of sheep on the map
+     */
     public int getNumSheep() {
-        return numSheep;
+        return this.numSheep;
     }
     
+    /**
+     * [getNumWolves]
+     * gets the number of wolves in the world
+     * @return int numWolves, the number wolves of on the map
+     */
     public int getNumWolves() {
-        return numWolves;
+        return this.numWolves;
     }
     
+    /**
+     * [getWidth]
+     * gets the width of the world in tiles
+     * @return int width, the width of the world in tiles
+     */
     public int getWidth() {
-        return width;
+        return this.width;
     }
     
+    /**
+     * [getHeight]
+     * gets the height of the world in tiles
+     * @return int height, the height of the world in tiles
+     */
     public int getHeight() {
-        return height;
+        return this.height;
     }
     
-    public String getEntityString(int x, int y) {
-        if (map[x][y] == null) {
+    /**
+     * [getEntityString]
+     * a shorthand to find the type of an entity at a given tile
+     * @param x the x position of the tile to get the entity from
+     * @param y the y position of the tile to get the entity from
+     * @return String, the type string of the entity at a given tile.
+     * Returns an empty string if null
+     */
+    public String getEntityType(int x, int y) {
+        if (this.map[x][y] == null) {
             return "";
         }
-        return map[x][y].getEntityType();
+        return this.map[x][y].getEntityType();
     }
     
+    /**
+     * [setActiveTile]
+     * sets the active tile based on the parameters
+     * @param x the x position to track
+     * @param y the y position to track
+     */
+    /*
     public void setActiveTile(int x, int y) {
-        activeX = x;
-        activeY = y;
+        this.activeX = x;
+        this.activeY = y;
     }
+    */
     
+    /**
+     * [getActiveX]
+     * gets the active x position for any connected GUIs to track the entity at
+     * @return int activeX, the position of the active entity
+     */
+    /*
     public int getActiveX() {
-        return activeX;
+        return this.activeX;
     }
+    */
     
+    /**
+     * [getActiveY]
+     * gets the active y postion for any connected GUIs to track the entity at
+     * @return int activeY, the position of the active entity
+     */
+    /*
     public int getActiveY() {
-        return activeY;
+        return this.activeY;
     }
+    */
 }
