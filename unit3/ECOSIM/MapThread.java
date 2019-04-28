@@ -28,9 +28,12 @@ public class MapThread extends Thread {
     }
     
     public void run() {
+        long lastFrame = System.currentTimeMillis();
+        long processTime = lastFrame;
         while ((world.getNumSheep() > 0) && (world.getNumWolves() > 0)) {
+            processTime = System.currentTimeMillis() - lastFrame;
             try {
-                this.sleep(tickDelay);
+                this.sleep(tickDelay - processTime);
             } catch (java.lang.InterruptedException e) {
                 System.out.println("threading error");
             }
@@ -38,6 +41,7 @@ public class MapThread extends Thread {
             if (window != null) {
                 window.incrementTurn();
             }
+            lastFrame = System.currentTimeMillis();
         }
         
         if (window != null) {

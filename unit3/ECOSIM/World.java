@@ -54,22 +54,16 @@ public class World {
         this.width = width;
         this.height = height;
         this.plantRate = plantRate;
-        
-        //activeX = 0;
-        //activeY = 0;
        
         numSheep = 0;
         numWolves = 0;
         numGrass = 0;
-        
-        System.out.println(plantChance);
-        System.out.println(plantChance + sheepChance);
-        System.out.println(plantChance + sheepChance + wolfChance);
     
         for (int x = 0; x < map.length; ++x) {
             for (int y = 0; y < map[0].length; ++y) {
+                //Determine what to spawn through rng
                 double r = Math.random();
-                //System.out.println(r);
+
                 if (r <= plantChance) {
                     map[x][y] = new Grass(x, y, this);
                     numGrass++;
@@ -94,9 +88,11 @@ public class World {
      * like entity counting and death checks
      */
     public void tick() { 
+        //Reset entity counts
         numSheep = 0;
         numWolves = 0;
         numGrass = 0;
+        //Do movements for every entity
         for (int x = 0; x < map.length; ++x) {
             for (int y = 0; y < map[0].length; ++y) {
                 if (map[x][y] != null) {
@@ -150,6 +146,8 @@ public class World {
                             
                         }
                     }
+                //For empty tiles, try to randomly generate tall grass
+                //The ground is naturally grassy, so this is for what will become TALL grass
                 } else {
                     if (Math.random() < plantRate) {
                         map[x][y] = new Grass(x, y, this);
@@ -158,14 +156,12 @@ public class World {
             }
         }
         
-        //Timer/deathchecks
+        //Age timer/deathchecks/post-movement entity counter
         for (int x = 0; x < map.length; ++x) {
             for (int y = 0; y < map[0].length; ++y) {
                 if (map[x][y] != null){
                     map[x][y].tick();
-                    if (map[x][y].getX() != x || map[x][y].getY() != y) {
-                        System.out.println("Bad pos");
-                    }
+                    //The deathcheck
                     if (map[x][y].getHealth() <= 0) {
                         map[x][y] = null;
                     } else {
@@ -181,18 +177,6 @@ public class World {
             }
         }
         
-    }
-
-    /**
-     * [randint]
-     * Generates a random integer, inclusive of the lower bound, 
-     * but exclusive of the higher bound
-     * @param low the lower bound of the generator
-     * @param the higher bound of the generator, not included in generation
-     * @return int, the randomly generated integer
-     */
-    public static int randint(int low, int high) {
-        return (int) (low + Math.random() * (high - low));
     }
     
     /**
