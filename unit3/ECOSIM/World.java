@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class World {
     
     private Entity[][] map;
+    private Entity[][] loadedMap;
 
     private int numSheep;
     private int numWolves;
@@ -21,7 +22,7 @@ public class World {
     //For special selections
     //private int activeX;
     //private int activeY;
-    
+    /*
     public World() {
         map = new Entity[5][5];
         this.width = 5;
@@ -40,6 +41,7 @@ public class World {
         map[2][3] = new Wolf(2, 3, this, Genetics.femaleChromosome + "AAAAAAAAAAAAAA", 
                                           Genetics.femaleChromosome + "TTTTTTTTTTTGGG");
     }
+    */
     
     /**
      * @param width the width of the world
@@ -50,7 +52,8 @@ public class World {
      */
     public World(int width, int height, double plantChance, double sheepChance, double wolfChance, 
                  double plantRate) {
-        map = new Entity[height][width];
+        map = new Entity[width][height];
+        loadedMap = new Entity[width][height];
         this.width = width;
         this.height = height;
         this.plantRate = plantRate;
@@ -80,6 +83,9 @@ public class World {
                 }
             }
         }
+        
+        //Save Turn 0 to loaded map
+        updateLoadedMap();
     }
     
     /**
@@ -177,6 +183,8 @@ public class World {
             }
         }
         
+        //Update loaded map after turn completion
+        updateLoadedMap();
     }
     
     /**
@@ -377,37 +385,25 @@ public class World {
     }
     
     /**
-     * [setActiveTile]
-     * sets the active tile based on the parameters
-     * @param x the x position to track
-     * @param y the y position to track
+     * [getLoadedMap]
+     * Used to get the map since the last completed turn, as it should
+     * almost never be halted by mid-turn processing.
+     * Intended for use by GUIs where a cascade effect is not intended.
+     * @return Entity[][] loadedMap, a map of the last completed turn
      */
-    /*
-    public void setActiveTile(int x, int y) {
-        this.activeX = x;
-        this.activeY = y;
+    public Entity[][] getLoadedMap() {
+        return loadedMap;
     }
-    */
     
     /**
-     * [getActiveX]
-     * gets the active x position for any connected GUIs to track the entity at
-     * @return int activeX, the position of the active entity
+     * [updateLoadedMap]
+     * Used internally to update loadedMap to the last finished turn
      */
-    /*
-    public int getActiveX() {
-        return this.activeX;
+    public void updateLoadedMap() {
+        for (int x = 0; x < map.length; ++x) {
+            for (int y = 0; y < map[0].length; ++y) {
+                loadedMap[x][y] = map[x][y];
+            }
+        }
     }
-    */
-    
-    /**
-     * [getActiveY]
-     * gets the active y postion for any connected GUIs to track the entity at
-     * @return int activeY, the position of the active entity
-     */
-    /*
-    public int getActiveY() {
-        return this.activeY;
-    }
-    */
 }

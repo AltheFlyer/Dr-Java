@@ -35,11 +35,14 @@ class DisplayGrid {
     private JFrame frame;
     private int maxX,maxY, GridToScreenRatio;
     private World world;
+    private Entity[][] displayMap;
     int turnCounter = 0;
     JLabel turnLabel;
     
     DisplayGrid(World w) { 
         this.world = w;
+        //Passes by reference
+        this.displayMap = world.getLoadedMap();
         
         maxX = Toolkit.getDefaultToolkit().getScreenSize().width;
         maxY = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -97,11 +100,10 @@ class DisplayGrid {
     
     public GridAreaPanel() {
         addMouseListener(this);
-        
         try {
             sheepImage = ImageIO.read(new File("sheep.png"));
         } catch (IOException e) {
-            System.out.println("Internal Files were modified, please redownload");
+            System.out.println("Internal Files were modified, please re-download");
         }
     }
     
@@ -110,16 +112,16 @@ class DisplayGrid {
       setDoubleBuffered(true); 
       g.setColor(Color.BLACK);
       
-      for(int i = 0; i<world.getWidth();i=i+1) { 
-          for(int j = 0; j<world.getHeight();j=j+1) { 
-              String type = world.getEntityType(i, j);
+      for(int i = 0; i<world.getWidth();i++) { 
+          for(int j = 0; j<world.getHeight();j++) { 
+              Entity e = displayMap[i][j];
               
-              if (type.equals("Wolf")) {    //This block can be changed to match character-color pairs
+              if (e instanceof Wolf) {    //This block can be changed to match character-color pairs
                   g.setColor(Color.RED);
-              } else if (type.equals("Sheep")) {
+              } else if (e instanceof Sheep) {
                   //g.setColor(Color.BLUE);
-                  g.setColor(((Sheep)(world.getEntityAt(i, j))).getWoolColor());
-              } else if (type.equals("Grass")) {
+                  g.setColor(((Sheep)(e)).getWoolColor());
+              } else if (e instanceof Grass) {
                   g.setColor(Color.GREEN);
               } else {
                   g.setColor(Color.WHITE);
@@ -154,8 +156,11 @@ class DisplayGrid {
     }
     
     public void mousePressed(MouseEvent e) {
-        //System.out.println("Mouse pressed; # of clicks: "
-        //+ e.getClickCount());
+        mX = e.getX();
+        mY = e.getY();
+        selectedX = mX / GridToScreenRatio;
+        selectedY = mY / GridToScreenRatio;
+        selected = displayMap[selectedX][selectedY];
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -174,11 +179,7 @@ class DisplayGrid {
     public void mouseClicked(MouseEvent e) {
         //System.out.println("Mouse clicked (# of clicks: "
         //            + e.getClickCount() + ")");
-        mX = e.getX();
-        mY = e.getY();
-        selectedX = mX / GridToScreenRatio;
-        selectedY = mY / GridToScreenRatio;
-        selected = world.getEntityAt(selectedX, selectedY);
+
     }
     
   }//end of GridAreaPanel

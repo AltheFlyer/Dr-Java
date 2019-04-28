@@ -12,6 +12,8 @@ abstract public class Entity {
     public static final int[] X_MOVES = {0, 1, 0, -1};
     public static final int[] Y_MOVES = {-1, 0, 1, 0};
     
+    private final String IMAGE_PATH = "";
+    
     //Stats
     private int health;
     private int age;
