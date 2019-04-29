@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * [Wolf.java]
@@ -18,6 +19,8 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     
     private int hungerThreshold = 30;
     private int minBreedingAge = 2;
+    
+    private static BufferedImage wolfSprite;
     
     /**
      * Creates a wolf in a world with randomized attributes
@@ -317,10 +320,24 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     }
     
     /**
-     * 
-     * 
+     * [setSprite]
+     * Initializes the static image for a wolf.
+     * Should be called before any graphics are used.
+     */
+    public static void setSprite() {
+        try {
+            wolfSprite = ImageIO.read(new File("wolf.png"));
+        } catch (IOException e) {
+            System.out.println("Image loading error, please re-download");
+        }   
+    }
+    
+    /**
+     * [getSprite]
+     * gets the sprite of the wolf for GUIs
+     * @return BufferedImage, and image of a wolf
      */
     public BufferedImage getSprite() {
-        return null;
+        return wolfSprite;
     }
 }

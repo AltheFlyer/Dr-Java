@@ -24,6 +24,7 @@ public class Sheep extends Entity {
     
     //Graphics
     private static BufferedImage whiteSheepSprite;
+    private static BufferedImage blackSheepSprite;
     
     /**
      * Creates a sheep with a set position and gender, but random genetics
@@ -35,11 +36,6 @@ public class Sheep extends Entity {
     public Sheep(int x, int y, World w, String gender) {
         this(x, y, w, gender + Genetics.generateRandomDNA(10), gender + Genetics.generateRandomDNA(10));
         this.decompilePhenotype();
-        try {
-        whiteSheepSprite = ImageIO.read(new File("sheep.png"));
-        } catch (IOException e) {
-            
-        }
     }
     
     /**
@@ -86,7 +82,7 @@ public class Sheep extends Entity {
         if (color <= 1) {
             this.woolColor = Color.BLACK;
         } else {
-            this.woolColor = new Color(200, 200, 200);
+            this.woolColor = Color.WHITE;
         }
     }
     
@@ -382,10 +378,30 @@ public class Sheep extends Entity {
     }
     
     /**
-     * 
-     * 
+     * [setSprite]
+     * Initializes the static images to be used for black and white sheep.
+     * Should be called before any graphics are used.
+     */
+    public static void setSprite() {
+        try {
+            whiteSheepSprite = ImageIO.read(new File("sheep.png"));
+            blackSheepSprite = ImageIO.read(new File("black_sheep.png"));
+        } catch (IOException e) {
+            System.out.println("Image loading error, please re-download");
+        }   
+    }
+    
+    /**
+     * [getSprite]
+     * gets the sprite of the sheep to use for GUIs, the sheep will
+     * either have white or black wool
+     * @return BufferedImage, and image of a sheep with the appropriate wool colour
      */
     public BufferedImage getSprite() {
-        return whiteSheepSprite;
+        if (this.woolColor == Color.WHITE) {
+            return Sheep.whiteSheepSprite;
+        } else {
+            return Sheep.blackSheepSprite;
+        }
     }
 }

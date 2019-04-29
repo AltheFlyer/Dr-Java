@@ -299,6 +299,14 @@ abstract public class Entity {
     }
     
     /**
+     * [setSprite]
+     * used to set the sprite(s) of the entity
+     */
+    static public void setSprite() {
+        
+    };
+    
+    /**
      * [getSprite]
      * gets the sprite of the entity to display
      * @return BufferedImage, the sprite of the entity

@@ -3,6 +3,9 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import java.io.File;
+import java.io.IOException;
+    
+
 
 /**
  * [Grass.java]
@@ -13,6 +16,7 @@ import java.io.File;
  */
 public class Grass extends Entity {
     
+    private static BufferedImage grassSprite;
     /**
      * Creates grass at a set position in the world
      * @param x the x position of the grass
@@ -71,11 +75,24 @@ public class Grass extends Entity {
         return "Grass";
     }
     
-        /**
-     * 
-     * 
+    /**
+     * [setSprite]
+     * Initializes the static image for tall grass
+     */
+    public static void setSprite() {
+        try {
+            grassSprite = ImageIO.read(new File("grass.png"));
+        } catch (IOException e) {
+            System.out.println("Image loading error, please re-download");
+        }   
+    }
+    
+    /**
+     * [getSprite]
+     * gets the sprite of the grass for GUIs
+     * @return BufferedImage, an image of grass
      */
     public BufferedImage getSprite() {
-        return null;
+        return grassSprite;
     }
 }

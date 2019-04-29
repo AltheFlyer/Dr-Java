@@ -49,6 +49,11 @@ public class EcoSim {
             plantRate = input.nextDouble();
         }
         
+        //initialize sprites
+        Sheep.setSprite();
+        Wolf.setSprite();
+        Grass.setSprite();
+        
         World map = new World(gridWidth, gridHeight, plantSpawn, sheepSpawn, wolfSpawn, plantRate);
         
         //Set up Grid Panel

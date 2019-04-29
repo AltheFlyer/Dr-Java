@@ -93,15 +93,9 @@ class DisplayGrid {
     int selectedY = 0;
     
     Entity selected = null;
-    BufferedImage sheepImage;
     
     public GridAreaPanel() {
         addMouseListener(this);
-        try {
-            sheepImage = ImageIO.read(new File("sheep.png"));
-        } catch (IOException e) {
-            System.out.println("Internal Files were modified, please re-download");
-        }
     }
     
     public void paintComponent(Graphics g) {        
@@ -113,8 +107,9 @@ class DisplayGrid {
           for(int j = 0; j<world.getHeight();j++) { 
               Entity e = world.getEntityAt(i, j);
               if (e != null) {
-                  
+                  g.drawImage(e.getSprite() ,i*GridToScreenRatio,j*GridToScreenRatio,GridToScreenRatio,GridToScreenRatio,this);
               }
+              /*
               if (e instanceof Wolf) {    //This block can be changed to match character-color pairs
                   g.setColor(Color.RED);
               } else if (e instanceof Sheep) {
@@ -131,6 +126,7 @@ class DisplayGrid {
               //g.drawString(type, i*GridToScreenRatio, (j + 1)*GridToScreenRatio);
               g.drawRect(i*GridToScreenRatio, j*GridToScreenRatio, GridToScreenRatio, GridToScreenRatio);
               //g.drawImage(sheepImage,j*GridToScreenRatio,i*GridToScreenRatio,GridToScreenRatio,GridToScreenRatio,this);
+              */
           }
       }
       if (selected != null && selected.getHealth() > 0) {
