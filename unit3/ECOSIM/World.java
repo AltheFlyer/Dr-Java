@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class World {
     
     private Entity[][] map;
-    private Entity[][] loadedMap;
 
     private int numSheep;
     private int numWolves;
@@ -53,7 +52,6 @@ public class World {
     public World(int width, int height, double plantChance, double sheepChance, double wolfChance, 
                  double plantRate) {
         map = new Entity[width][height];
-        loadedMap = new Entity[width][height];
         this.width = width;
         this.height = height;
         this.plantRate = plantRate;
@@ -83,9 +81,6 @@ public class World {
                 }
             }
         }
-        
-        //Save Turn 0 to loaded map
-        updateLoadedMap();
     }
     
     /**
@@ -182,9 +177,6 @@ public class World {
                 }
             }
         }
-        
-        //Update loaded map after turn completion
-        updateLoadedMap();
     }
     
     /**
@@ -382,28 +374,5 @@ public class World {
             return "";
         }
         return this.map[x][y].getEntityType();
-    }
-    
-    /**
-     * [getLoadedMap]
-     * Used to get the map since the last completed turn, as it should
-     * almost never be halted by mid-turn processing.
-     * Intended for use by GUIs where a cascade effect is not intended.
-     * @return Entity[][] loadedMap, a map of the last completed turn
-     */
-    public Entity[][] getLoadedMap() {
-        return loadedMap;
-    }
-    
-    /**
-     * [updateLoadedMap]
-     * Used internally to update loadedMap to the last finished turn
-     */
-    public void updateLoadedMap() {
-        for (int x = 0; x < map.length; ++x) {
-            for (int y = 0; y < map[0].length; ++y) {
-                loadedMap[x][y] = map[x][y];
-            }
-        }
     }
 }

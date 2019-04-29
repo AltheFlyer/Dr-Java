@@ -47,32 +47,29 @@ public class EcoSim {
             
             System.out.println("Enter the plant growth rate");
             plantRate = input.nextDouble();
-            
-            System.out.println("Enter your preferred frame rate (frames/second)");
-            framesPerSecond = input.nextDouble();
-            
-            System.out.println("Enter your time between turns (milliseconds)");
-            turnDelay = input.nextLong();
         }
         
         World map = new World(gridWidth, gridHeight, plantSpawn, sheepSpawn, wolfSpawn, plantRate);
         
-        //0.5, 0.3, 0.04, 0.05
-        //World map = new World();
-        //System.out.println(((Sheep)(map.getEntityAt(0, 0))).getHeuristicTile());
-                           
-        //World map = new World(50, 50, pSpawn, sSpawn, wSpawn, plantRate);
-        
-        //String[][] stringMap = map.getStringArray();
-       
         //Set up Grid Panel
-        //DisplayGrid grid = new DisplayGrid(map);
-        WindowThread windows = new WindowThread(map, framesPerSecond);
+        DisplayGrid grid = new DisplayGrid(map);
         
-        MapThread thread = new MapThread(map, turnDelay, windows);
+        long lastTurn = System.currentTimeMillis();
         
-        thread.start();
-        windows.start();
+        while ((map.getNumSheep() > 0) && (map.getNumWolves() > 0)) {
+            if (System.currentTimeMillis() - lastTurn > 1000) {
+                map.tick();
+                lastTurn = System.currentTimeMillis();
+                grid.incrementTurn();
+            }
+            
+            grid.refresh();
+        }
     
+        if (map.getNumSheep() <= 0) {
+            System.out.println("Sheep Extinction");
+        } else if (map.getNumWolves() <= 0) {
+            System.out.println("Wolf Extinction");
+        }
     }
 }

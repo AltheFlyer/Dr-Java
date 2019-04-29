@@ -15,6 +15,9 @@ public class Sheep extends Entity {
     private Color woolColor;
     private int minBreedingAge = 5;
     
+    //Graphics
+    
+    
     /**
      * Creates a sheep with random attributes
      * @param w the world that the sheep is in
@@ -22,6 +25,7 @@ public class Sheep extends Entity {
     public Sheep(World w) {
         this(0, 0, w, Genetics.getRandomGender());
         this.decompilePhenotype();
+        
     }
     
     /**

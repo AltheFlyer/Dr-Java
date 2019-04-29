@@ -1,3 +1,5 @@
+import java.awt.image.BufferedImage;
+
 /**
  * [Entity.java]
  * @version 2.0
@@ -295,4 +297,11 @@ abstract public class Entity {
     public int getAge() {
         return age;
     }
+    
+    /**
+     * [getSprite]
+     * gets the sprite of the entity to display
+     * @return BufferedImage, the sprite of the entity
+     */
+    //abstract public BufferedImage getSprite();
 }

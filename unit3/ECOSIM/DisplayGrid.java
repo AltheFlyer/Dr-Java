@@ -35,14 +35,11 @@ class DisplayGrid {
     private JFrame frame;
     private int maxX,maxY, GridToScreenRatio;
     private World world;
-    private Entity[][] displayMap;
     int turnCounter = 0;
     JLabel turnLabel;
     
     DisplayGrid(World w) { 
         this.world = w;
-        //Passes by reference
-        this.displayMap = world.getLoadedMap();
         
         maxX = Toolkit.getDefaultToolkit().getScreenSize().width;
         maxY = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -80,7 +77,7 @@ class DisplayGrid {
     
     public void incrementTurn() {
         turnCounter++;
-        turnLabel.setText("Turn " + turnCounter);
+        frame.setTitle("Map of the World: Turn " + turnCounter);
     }
     
     public void pushAlert(String alert) {
@@ -114,7 +111,7 @@ class DisplayGrid {
       
       for(int i = 0; i<world.getWidth();i++) { 
           for(int j = 0; j<world.getHeight();j++) { 
-              Entity e = displayMap[i][j];
+              Entity e = world.getEntityAt(i, j);
               
               if (e instanceof Wolf) {    //This block can be changed to match character-color pairs
                   g.setColor(Color.RED);
@@ -160,7 +157,7 @@ class DisplayGrid {
         mY = e.getY();
         selectedX = mX / GridToScreenRatio;
         selectedY = mY / GridToScreenRatio;
-        selected = displayMap[selectedX][selectedY];
+        selected = world.getEntityAt(selectedX, selectedY);
     }
 
     public void mouseReleased(MouseEvent e) {
