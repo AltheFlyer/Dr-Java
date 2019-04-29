@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+
+import java.io.File;
+
 /**
  * [Wolf.java]
  * @version 1.7
@@ -11,6 +17,7 @@ import java.util.ArrayList;
 public class Wolf extends Entity implements Comparable<Wolf> {
     
     private int hungerThreshold = 30;
+    private int minBreedingAge = 2;
     
     /**
      * Creates a wolf in a world with randomized attributes
@@ -64,38 +71,8 @@ public class Wolf extends Entity implements Comparable<Wolf> {
      * 3 is down<br>
      * 4 is left
      */
-    public int move() {
-        //Only check nearby tiles for an instant sheep kill when hungry
-        /*
-        if (this.getHealth() < this.hungerThreshold) {
-            int maxValue = 0;
-            int move = 0;
-            
-            for (int i = 0; i < 4; ++i) {
-                if (this.world.tileExists(this.getX() + Entity.X_MOVES[i], this.getY() + Entity.Y_MOVES[i]) && 
-                    this.world.getEntityAt(this.getX() + Entity.X_MOVES[i], 
-                                           this.getY() + Entity.Y_MOVES[i]) instanceof Sheep) {
-                    
-                    if (this.world.getEntityAt(this.getX() + Entity.X_MOVES[i], 
-                                               this.getY() + Entity.Y_MOVES[i]).getHealth() > maxValue) {
-                        maxValue = this.world.getEntityAt(this.getX() + Entity.X_MOVES[i], this.getY() + Entity.Y_MOVES[i]).getHealth();
-                        move = i + 1;
-                    }
-                }
-            }
-            if (maxValue != 0) {
-                return move;
-            }
-        }
-        
-        //Default random walk
-        int r;
-        if (Math.random() > (1.0 / this.getIntelligence())) {
-            r = randint(0, 5);
-        } else {
-        */
+    public int move() {   
         int r = this.getHeuristicTile();
-        //}
 
         return r;
     }
@@ -132,7 +109,8 @@ public class Wolf extends Entity implements Comparable<Wolf> {
                 }
             //Opposite gender, try to make babies
             } else {
-                if ((this.getHealth() > 20) && (e.getHealth() > 20)) {
+                if ((this.getHealth() > 20) && (e.getHealth() > 20) &&
+                    (this.getAge() <= minBreedingAge) && (e.getAge() <= this.minBreedingAge)) {
                     //Generate a random gender for the new wolf
                     String genderMod = Genetics.getRandomGender();
                     
@@ -216,14 +194,12 @@ public class Wolf extends Entity implements Comparable<Wolf> {
         int[][] distance = new int[world.getWidth()][world.getHeight()];
         int[][] wolfDistance = new int[world.getWidth()][world.getHeight()];
         int[][] sheepDistance = new int[world.getWidth()][world.getHeight()];
-        int[][] grassDistance = new int[world.getWidth()][world.getHeight()];
         
         for (int i = 0; i < world.getWidth(); ++i) {
             for (int j = 0; j < world.getHeight(); ++j) {
                 distance[i][j] = -1;
                 wolfDistance[i][j] = -1;
                 sheepDistance[i][j] = -1;
-                grassDistance[i][j] = -1;
             }
         }
         
@@ -231,8 +207,7 @@ public class Wolf extends Entity implements Comparable<Wolf> {
         //location arrays
         ArrayList<Integer> wolfPositions = new ArrayList<Integer>();
         ArrayList<Integer> sheepPositions = new ArrayList<Integer>();
-        ArrayList<Integer> grassPositions = new ArrayList<Integer>();
-        
+
         int topTile = 0;
         int rightTile = 0;
         int bottomTile = 0;
@@ -251,8 +226,6 @@ public class Wolf extends Entity implements Comparable<Wolf> {
                 wolfPositions.add(tile);
             } else if (world.getEntityAt(x, y) instanceof Sheep) {
                 sheepPositions.add(tile);
-            } else if (world.getEntityAt(x, y) instanceof Grass) {
-                grassPositions.add(tile);
             }
             
             if (distance[x][y] < getRange()) {
@@ -314,30 +287,6 @@ public class Wolf extends Entity implements Comparable<Wolf> {
             }
         }
 
-        
-        for (int grass: grassPositions) {
-            tileQueue.add(grass);
-            int x = world.intToX(grass);
-            int y = world.intToY(grass);
-            grassDistance[x][y] = 0;
-        }
-        
-        while (!tileQueue.isEmpty()) {
-            int tile = tileQueue.remove(0);
-            int x = world.intToX(tile);
-            int y = world.intToY(tile);
-            
-            if (distance[x][y] != -1) {
-                for (int i = 0; i < 4; ++i) {
-                    if ((world.tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
-                        (grassDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] == -1)) {
-                        tileQueue.add(world.coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
-                        grassDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] = grassDistance[x][y] + 1;
-                    }
-                }
-            }
-        }
-
         int minValue = sheepDistance[getX()][getY()];
         int direction = 0;
         for (int i = 0; i < 4; ++i) {
@@ -365,5 +314,13 @@ public class Wolf extends Entity implements Comparable<Wolf> {
         }
         
         return direction;
+    }
+    
+    /**
+     * 
+     * 
+     */
+    public BufferedImage getSprite() {
+        return null;
     }
 }

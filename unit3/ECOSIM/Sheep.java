@@ -2,6 +2,13 @@ import java.util.ArrayList;
 
 import java.awt.Color;
 
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+
+import java.io.File;
+import java.io.IOException;
+
 /**
  * [Sheep.java]
  * @version 1.9
@@ -16,17 +23,7 @@ public class Sheep extends Entity {
     private int minBreedingAge = 5;
     
     //Graphics
-    
-    
-    /**
-     * Creates a sheep with random attributes
-     * @param w the world that the sheep is in
-     */
-    public Sheep(World w) {
-        this(0, 0, w, Genetics.getRandomGender());
-        this.decompilePhenotype();
-        
-    }
+    private static BufferedImage whiteSheepSprite;
     
     /**
      * Creates a sheep with a set position and gender, but random genetics
@@ -38,6 +35,11 @@ public class Sheep extends Entity {
     public Sheep(int x, int y, World w, String gender) {
         this(x, y, w, gender + Genetics.generateRandomDNA(10), gender + Genetics.generateRandomDNA(10));
         this.decompilePhenotype();
+        try {
+        whiteSheepSprite = ImageIO.read(new File("sheep.png"));
+        } catch (IOException e) {
+            
+        }
     }
     
     /**
@@ -377,5 +379,13 @@ public class Sheep extends Entity {
      */
     public Color getWoolColor() {
         return this.woolColor;
+    }
+    
+    /**
+     * 
+     * 
+     */
+    public BufferedImage getSprite() {
+        return whiteSheepSprite;
     }
 }

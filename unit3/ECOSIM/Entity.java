@@ -303,5 +303,5 @@ abstract public class Entity {
      * gets the sprite of the entity to display
      * @return BufferedImage, the sprite of the entity
      */
-    //abstract public BufferedImage getSprite();
+    abstract public BufferedImage getSprite();
 }

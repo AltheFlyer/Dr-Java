@@ -1,3 +1,9 @@
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+
+import java.io.File;
+
 /**
  * [Grass.java]
  * @version 1.2
@@ -65,5 +71,11 @@ public class Grass extends Entity {
         return "Grass";
     }
     
-    
+        /**
+     * 
+     * 
+     */
+    public BufferedImage getSprite() {
+        return null;
+    }
 }

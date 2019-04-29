@@ -112,7 +112,9 @@ class DisplayGrid {
       for(int i = 0; i<world.getWidth();i++) { 
           for(int j = 0; j<world.getHeight();j++) { 
               Entity e = world.getEntityAt(i, j);
-              
+              if (e != null) {
+                  
+              }
               if (e instanceof Wolf) {    //This block can be changed to match character-color pairs
                   g.setColor(Color.RED);
               } else if (e instanceof Sheep) {

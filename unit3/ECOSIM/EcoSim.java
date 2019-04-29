@@ -38,14 +38,14 @@ public class EcoSim {
             System.out.println("Enter the world height");
             gridHeight = input.nextInt();
             
-            System.out.println("Enter the plant spawn chance (decimal)");
+            System.out.println("Enter the initial plant spawn chance (decimal)");
             plantSpawn = input.nextDouble();
-            System.out.println("Enter the sheep spawn chance (decimal)");
+            System.out.println("Enter the initial sheep spawn chance (decimal)");
             sheepSpawn = input.nextDouble();
-            System.out.println("Enter the wolf spawn chance (decimal)");
+            System.out.println("Enter the intial wolf spawn chance (decimal)");
             wolfSpawn = input.nextDouble();
             
-            System.out.println("Enter the plant growth rate");
+            System.out.println("Enter the plant regrowth rate (chance per tile)");
             plantRate = input.nextDouble();
         }
         
