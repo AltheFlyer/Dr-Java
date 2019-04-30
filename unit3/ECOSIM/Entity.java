@@ -24,21 +24,32 @@ abstract public class Entity {
     private int adultThreshold;
     
     //Genetics
+    //This value is active, and determines other attributes
     private String phenotype;
+    //this value is 'hidden', and is only used during breeding (where parts of it may be used)
     private String genotype;
     
     //These values are dependant on genetics
+    //A boolean for whether an entity is male or female
     private boolean isMale;
+    //The entity's detection range of other entities
     private int visionRange;
+    //The entity's maximum age (it instantly dies if it goes past this)
     private int maxAge;
+    //The entity's maximum health (this prevents the 1000 health wolf from existing)
     private int maxHealth;
+    //This controls the entity's chance of not using heuristic based movement, 
+    //the chance is a reciprocal of intelligence
     private int intelligence;
     
     //World interaction values
-    private int x, y;    
+    //Positions
+    private int x, y;
+    //Whether the entity can move or not - should only be false after moving in a single turn
     private boolean canMove;
     
-    World world;
+    //The world that the entity is in
+    private World world;
     
     public Entity(int x, int y, World w, String pheno, String geno) {
         world = w;
@@ -312,4 +323,13 @@ abstract public class Entity {
      * @return BufferedImage, the sprite of the entity
      */
     abstract public BufferedImage getSprite();
+    
+    /**
+     * [getWorld]
+     * gets the current world that the entity is in
+     * @return World, the world that the entity is in
+     */
+    public World getWorld() {
+        return this.world;
+    }
 }

@@ -30,7 +30,7 @@ public class Sheep extends Entity {
      * Creates a sheep with a set position and gender, but random genetics
      * @param x the x position of the sheep
      * @param y the y position of the sheep
-     * @param w the world that the sheep is in
+     * @param w the this.getWorld() that the sheep is in
      * @param gender the gender of the sheep as a dna string
      */
     public Sheep(int x, int y, World w, String gender) {
@@ -42,7 +42,7 @@ public class Sheep extends Entity {
      * Creates a sheep with a set position and genome
      * @param x the x position of the sheep
      * @param y the y position of the sheep
-     * @param w the world that the sheep is in
+     * @param w the this.getWorld() that the sheep is in
      * @param pheno the phenotype of the sheep
      * @param geno the genotype of the sheep
      */
@@ -53,7 +53,7 @@ public class Sheep extends Entity {
     
     /**
      * Creates a sheep with a set genome but unknown position
-     * @param w the world that the sheep is in
+     * @param w the this.getWorld() that the sheep is in
      * @param pheno the phenotype of the sheep
      * @param geno the genotype of the sheep
      */
@@ -141,8 +141,8 @@ public class Sheep extends Entity {
                 newDNA[0] = genderMod + newDNA[0];
                 newDNA[1] = genderMod + newDNA[1];
                 
-                //Add the entity to the world
-                this.world.addEntity(new Sheep(this.world, newDNA[0], newDNA[1]),
+                //Add the entity to the this.getWorld()
+                this.getWorld().addEntity(new Sheep(this.getWorld(), newDNA[0], newDNA[1]),
                                      this.getX(), this.getY(), 1);
                 
                 //Reduce the health of both entities
@@ -208,21 +208,21 @@ public class Sheep extends Entity {
         
         //Distance arrays:
         //Used to get all tiles in vision range
-        int[][] distance = new int[this.world.getWidth()][this.world.getHeight()];
+        int[][] distance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
         
         //Used to get the distance to the closest wolf for all tiles in range
-        int[][] wolfDistance = new int[this.world.getWidth()][this.world.getHeight()];
+        int[][] wolfDistance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
         
         //Used to get the distance to the closest sheep for all tiles in range
-        int[][] sheepDistance = new int[this.world.getWidth()][this.world.getHeight()];
+        int[][] sheepDistance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
         
         //Used to get the distance to the closest grass for all tiles in range
-        int[][] grassDistance = new int[this.world.getWidth()][this.world.getHeight()];
+        int[][] grassDistance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
         
         
         //Prefill arrays with -1 (unexplored)
-        for (int i = 0; i < this.world.getWidth(); ++i) {
-            for (int j = 0; j < this.world.getHeight(); ++j) {
+        for (int i = 0; i < this.getWorld().getWidth(); ++i) {
+            for (int j = 0; j < this.getWorld().getHeight(); ++j) {
                 distance[i][j] = -1;
                 wolfDistance[i][j] = -1;
                 sheepDistance[i][j] = -1;
@@ -238,27 +238,27 @@ public class Sheep extends Entity {
 
         //Scout to find all entities in range
         ArrayList<Integer> tileQueue = new ArrayList<Integer>(); 
-        tileQueue.add(world.coordToInt(this.getX(), this.getY()));
+        tileQueue.add(this.getWorld().coordToInt(this.getX(), this.getY()));
         distance[this.getX()][this.getY()] = 0;
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
-            int x = world.intToX(tile);
-            int y = world.intToY(tile);
+            int x = this.getWorld().intToX(tile);
+            int y = this.getWorld().intToY(tile);
             
-            if (world.getEntityAt(x, y) instanceof Wolf) {
+            if (this.getWorld().getEntityAt(x, y) instanceof Wolf) {
                 wolfPositions.add(tile);
-            } else if (world.getEntityAt(x, y) instanceof Sheep) {
+            } else if (this.getWorld().getEntityAt(x, y) instanceof Sheep) {
                 sheepPositions.add(tile);
-            } else if (world.getEntityAt(x, y) instanceof Grass) {
+            } else if (this.getWorld().getEntityAt(x, y) instanceof Grass) {
                 grassPositions.add(tile);
             }
             
             if (distance[x][y] < getRange()) {
                 for (int i = 0; i < 4; ++i) {
-                    if ((world.tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
+                    if ((this.getWorld().tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
                         (distance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] == -1)) {
-                        tileQueue.add(world.coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
+                        tileQueue.add(this.getWorld().coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
                         distance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] = distance[x][y] + 1;
                     }
                 }
@@ -269,21 +269,21 @@ public class Sheep extends Entity {
         //Wolf bfs
         for (int wolf: wolfPositions) {
             tileQueue.add(wolf);
-            int x = this.world.intToX(wolf);
-            int y = this.world.intToY(wolf);
+            int x = this.getWorld().intToX(wolf);
+            int y = this.getWorld().intToY(wolf);
             wolfDistance[x][y] = 0;
         }
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
-            int x = this.world.intToX(tile);
-            int y = this.world.intToY(tile);
+            int x = this.getWorld().intToX(tile);
+            int y = this.getWorld().intToY(tile);
             
             if (distance[x][y] != -1) {
                 for (int i = 0; i < 4; ++i) {
-                    if ((this.world.tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
+                    if ((this.getWorld().tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
                         (wolfDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] == -1)) {
-                        tileQueue.add(this.world.coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
+                        tileQueue.add(this.getWorld().coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
                         wolfDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] = wolfDistance[x][y] + 1;
                     }
                 }
@@ -292,21 +292,21 @@ public class Sheep extends Entity {
 
         for (int sheep: sheepPositions) {
             tileQueue.add(sheep);
-            int x = this.world.intToX(sheep);
-            int y = this.world.intToY(sheep);
+            int x = this.getWorld().intToX(sheep);
+            int y = this.getWorld().intToY(sheep);
             sheepDistance[x][y] = 0;
         }
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
-            int x = this.world.intToX(tile);
-            int y = this.world.intToY(tile);
+            int x = this.getWorld().intToX(tile);
+            int y = this.getWorld().intToY(tile);
             
             if (distance[x][y] != -1) {
                 for (int i = 0; i < 4; ++i) {
-                    if ((this.world.tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
+                    if ((this.getWorld().tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
                         (sheepDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] == -1)) {
-                        tileQueue.add(this.world.coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
+                        tileQueue.add(this.getWorld().coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
                         sheepDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] = sheepDistance[x][y] + 1;
                     }
                 }
@@ -316,21 +316,21 @@ public class Sheep extends Entity {
         
         for (int grass: grassPositions) {
             tileQueue.add(grass);
-            int x = this.world.intToX(grass);
-            int y = this.world.intToY(grass);
+            int x = this.getWorld().intToX(grass);
+            int y = this.getWorld().intToY(grass);
             grassDistance[x][y] = 0;
         }
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
-            int x = this.world.intToX(tile);
-            int y = this.world.intToY(tile);
+            int x = this.getWorld().intToX(tile);
+            int y = this.getWorld().intToY(tile);
             
             if (distance[x][y] != -1) {
                 for (int i = 0; i < 4; ++i) {
-                    if ((this.world.tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
+                    if ((this.getWorld().tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
                         (grassDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] == -1)) {
-                        tileQueue.add(this.world.coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
+                        tileQueue.add(this.getWorld().coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
                         grassDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] = grassDistance[x][y] + 1;
                     }
                 }
@@ -346,7 +346,7 @@ public class Sheep extends Entity {
         int direction = 0;
         //Check heuristic value for 4 adjacent tiles
         for (int i = 0; i < 4; ++i) {
-            if (this.world.tileExists(this.getX() + Entity.X_MOVES[i], this.getY() + Entity.Y_MOVES[i])) {
+            if (this.getWorld().tileExists(this.getX() + Entity.X_MOVES[i], this.getY() + Entity.Y_MOVES[i])) {
                 
                 int x = this.getX() + Entity.X_MOVES[i];
                 int y = this.getY() + Entity.Y_MOVES[i];

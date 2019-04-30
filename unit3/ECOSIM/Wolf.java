@@ -23,8 +23,8 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     private static BufferedImage wolfSprite;
     
     /**
-     * Creates a wolf in a world with randomized attributes
-     * @param w the world that the wolf is on
+     * Creates a wolf in a this.getWorld() with randomized attributes
+     * @param w the this.getWorld() that the wolf is on
      */
     public Wolf(World w) {
         this(0, 0, w, Genetics.getRandomGender());
@@ -32,9 +32,9 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     
     /**
      * Creates a wolf with a set position and gender, but random attributes
-     * @param x the x position in the world that the wolf is on
-     * @param y the y position in the world that the wolf is on
-     * @param w the world that the wolf is in
+     * @param x the x position in the this.getWorld() that the wolf is on
+     * @param y the y position in the this.getWorld() that the wolf is on
+     * @param w the this.getWorld() that the wolf is in
      * @param gender the gender of the wolf as a dna string
      */
     public Wolf(int x, int y, World w, String gender) {
@@ -53,9 +53,9 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     
     /**
      * Creates a wolf with a set genome and position
-     * @param x the x position in the world that the wolf is on
-     * @param y the y position in the world that the wolf is on
-     * @param w the world that the wolf is in
+     * @param x the x position in the this.getWorld() that the wolf is on
+     * @param y the y position in the this.getWorld() that the wolf is on
+     * @param w the this.getWorld() that the wolf is in
      * @param pheno the phenotype of the wolf
      * @param geno the genotype of the wolf
      */
@@ -127,7 +127,7 @@ public class Wolf extends Entity implements Comparable<Wolf> {
                     newDNA[0] = genderMod + newDNA[0];
                     newDNA[1] = genderMod + newDNA[1];
                     
-                    world.addEntity(new Wolf(world, newDNA[0], newDNA[1]), getX(), getY(), 1);
+                    this.getWorld().addEntity(new Wolf(this.getWorld(), newDNA[0], newDNA[1]), getX(), getY(), 1);
                     
                     this.modHealth(-10);
                     e.modHealth(-10);
@@ -194,12 +194,12 @@ public class Wolf extends Entity implements Comparable<Wolf> {
      * 4 is left
      */
     public int getHeuristicTile() {
-        int[][] distance = new int[world.getWidth()][world.getHeight()];
-        int[][] wolfDistance = new int[world.getWidth()][world.getHeight()];
-        int[][] sheepDistance = new int[world.getWidth()][world.getHeight()];
+        int[][] distance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
+        int[][] wolfDistance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
+        int[][] sheepDistance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
         
-        for (int i = 0; i < world.getWidth(); ++i) {
-            for (int j = 0; j < world.getHeight(); ++j) {
+        for (int i = 0; i < this.getWorld().getWidth(); ++i) {
+            for (int j = 0; j < this.getWorld().getHeight(); ++j) {
                 distance[i][j] = -1;
                 wolfDistance[i][j] = -1;
                 sheepDistance[i][j] = -1;
@@ -217,25 +217,25 @@ public class Wolf extends Entity implements Comparable<Wolf> {
         int leftTile = 0;
         //Scout to find all entities in range
         ArrayList<Integer> tileQueue = new ArrayList<Integer>(); 
-        tileQueue.add(world.coordToInt(getX(), getY()));
+        tileQueue.add(this.getWorld().coordToInt(getX(), getY()));
         distance[getX()][getY()] = 0;
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
-            int x = world.intToX(tile);
-            int y = world.intToY(tile);
+            int x = this.getWorld().intToX(tile);
+            int y = this.getWorld().intToY(tile);
             
-            if ((world.getEntityAt(x, y) instanceof Wolf)) {
+            if ((this.getWorld().getEntityAt(x, y) instanceof Wolf)) {
                 wolfPositions.add(tile);
-            } else if (world.getEntityAt(x, y) instanceof Sheep) {
+            } else if (this.getWorld().getEntityAt(x, y) instanceof Sheep) {
                 sheepPositions.add(tile);
             }
             
             if (distance[x][y] < getRange()) {
                 for (int i = 0; i < 4; ++i) {
-                    if ((world.tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
+                    if ((this.getWorld().tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
                         (distance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] == -1)) {
-                        tileQueue.add(world.coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
+                        tileQueue.add(this.getWorld().coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
                         distance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] = distance[x][y] + 1;
                     }
                 }
@@ -246,21 +246,21 @@ public class Wolf extends Entity implements Comparable<Wolf> {
         //Wolf bfs
         for (int wolf: wolfPositions) {
             tileQueue.add(wolf);
-            int x = world.intToX(wolf);
-            int y = world.intToY(wolf);
+            int x = this.getWorld().intToX(wolf);
+            int y = this.getWorld().intToY(wolf);
             wolfDistance[x][y] = 0;
         }
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
-            int x = world.intToX(tile);
-            int y = world.intToY(tile);
+            int x = this.getWorld().intToX(tile);
+            int y = this.getWorld().intToY(tile);
             
             if (distance[x][y] != -1) {
                 for (int i = 0; i < 4; ++i) {
-                    if ((world.tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
+                    if ((this.getWorld().tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
                         (wolfDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] == -1)) {
-                        tileQueue.add(world.coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
+                        tileQueue.add(this.getWorld().coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
                         wolfDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] = wolfDistance[x][y] + 1;
                     }
                 }
@@ -269,21 +269,21 @@ public class Wolf extends Entity implements Comparable<Wolf> {
 
         for (int sheep: sheepPositions) {
             tileQueue.add(sheep);
-            int x = world.intToX(sheep);
-            int y = world.intToY(sheep);
+            int x = this.getWorld().intToX(sheep);
+            int y = this.getWorld().intToY(sheep);
             sheepDistance[x][y] = 0;
         }
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
-            int x = world.intToX(tile);
-            int y = world.intToY(tile);
+            int x = this.getWorld().intToX(tile);
+            int y = this.getWorld().intToY(tile);
             
             if (distance[x][y] != -1) {
                 for (int i = 0; i < 4; ++i) {
-                    if ((world.tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
+                    if ((this.getWorld().tileExists(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i])) && 
                         (sheepDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] == -1)) {
-                        tileQueue.add(world.coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
+                        tileQueue.add(this.getWorld().coordToInt(x + Entity.X_MOVES[i], y + Entity.Y_MOVES[i]));
                         sheepDistance[x + Entity.X_MOVES[i]][y + Entity.Y_MOVES[i]] = sheepDistance[x][y] + 1;
                     }
                 }
@@ -293,7 +293,7 @@ public class Wolf extends Entity implements Comparable<Wolf> {
         int minValue = sheepDistance[getX()][getY()];
         int direction = 0;
         for (int i = 0; i < 4; ++i) {
-            if (world.tileExists(getX() + Entity.X_MOVES[i], getY() + Entity.Y_MOVES[i])) {
+            if (this.getWorld().tileExists(getX() + Entity.X_MOVES[i], getY() + Entity.Y_MOVES[i])) {
                 //Heuristic: Math.min(s(), w())
                 int x = getX() + Entity.X_MOVES[i];
                 int y = getY() + Entity.Y_MOVES[i];

@@ -5,8 +5,14 @@ import java.util.Scanner;
  * @version 1.4
  * @author Allen Liu
  * @since April 26, 2019
- * An ecosystem simulator with sheep, grass, and wolves including
- * genetics and pathfinding
+ * An ecosystem simulator with sheep, grass, and wolves<br>
+ * Additional Features/Modifications:<br>
+ * - Sheep and Wolves can mate, and produce offspring in a nearby tile (if possible)<br>
+ * - Wolves no longer guaranteed to fight each other, as some can mate<br>
+ * - Genetics are implemented for grass, sheep and wolves<br>
+ * - Attributes such as gender, vision/entity detection range, intelligence (chance to use inoptimal movement)<br>
+ * wool color, maximum health, and maximum age are controlled through simplified genes<br>
+ * - The User can click inside during the ecosim to track an entity, up until death<br>
  */
 public class EcoSim {
     

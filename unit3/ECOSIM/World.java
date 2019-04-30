@@ -362,7 +362,7 @@ public class World {
     }
     
     /**
-     * [getEntityString]
+     * [getEntityType]
      * a shorthand to find the type of an entity at a given tile
      * @param x the x position of the tile to get the entity from
      * @param y the y position of the tile to get the entity from
