@@ -2,9 +2,9 @@ import java.awt.image.BufferedImage;
 
 /**
  * [Entity.java]
- * @version 2.0
+ * @version 3.0
  * @author Allen Liu
- * @since April 26, 2019
+ * @since April 29, 2019
  * The abstract class for all entities (Sheep, Wolves, Grass), in the ecosim
  */
 abstract public class Entity {

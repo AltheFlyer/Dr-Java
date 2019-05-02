@@ -2,7 +2,7 @@
  * [Genetics.java]
  * @version 1.8
  * @author Allen Liu
- * @since April 18, 2019
+ * @since April 27, 2019
  * Static class for genetic opperations, where DNA is primarily used as a base-4 system
  * All methods are public in case advanced DNA maniputlation (with partial genomes) is needed
  * i.e a genetics research lab opens up in the ecosim.<br>

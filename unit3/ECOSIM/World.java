@@ -2,45 +2,25 @@ import java.util.ArrayList;
 
 /**
  * [World.java]
- * @version 1.6
+ * @version 2.0
  * @author Allen Liu
  * @since April 26, 2019
  * A world object that can contain and control various entities
  */
 public class World {
     
+    //This is where all of the entities are stored
     private Entity[][] map;
 
+    //Entity counters
     private int numSheep;
     private int numWolves;
     private int numGrass;
+    //Plant growth rate
     private double plantRate;
+    //Map dimensions
     private int width;
     private int height;
-    
-    //For special selections
-    //private int activeX;
-    //private int activeY;
-    /*
-    public World() {
-        map = new Entity[5][5];
-        this.width = 5;
-        this.height = 5;
-        this.plantRate = 0.05;
-        
-        //activeX = 0;
-        //activeY = 0;
-       
-        numSheep = 10;
-        numWolves = 10;
-        numGrass = 10;
-        
-        map[2][2] = new Sheep(2, 2, this, Genetics.maleChromosome + "AAAAAAAAAAAAAAA",
-                                          Genetics.maleChromosome + "CCCCCCCCCCCTTTT");
-        map[2][3] = new Wolf(2, 3, this, Genetics.femaleChromosome + "AAAAAAAAAAAAAA", 
-                                          Genetics.femaleChromosome + "TTTTTTTTTTTGGG");
-    }
-    */
     
     /**
      * @param width the width of the world
@@ -68,11 +48,11 @@ public class World {
                 if (r <= plantChance) {
                     map[x][y] = new Grass(x, y, this);
                     numGrass++;
-                } else if (r <= plantChance + sheepChance) {
+                } else if (r <= (plantChance + sheepChance)) {
                     String gender = Genetics.getRandomGender();
                     map[x][y] = new Sheep(x, y, this, gender);
                     numSheep++;
-                } else if (r <= plantChance + sheepChance + wolfChance) {
+                } else if (r <= (plantChance + sheepChance + wolfChance)) {
                     String gender = Genetics.getRandomGender();
                     map[x][y] = new Wolf(x, y, this, gender);
                     numWolves++;
@@ -123,12 +103,6 @@ public class World {
                                     map[x][y] = null;
                                     //Update position
                                     map[newX][newY].setPos(newX, newY);
-                                    //Update active tile
-                                    /*
-                                    if (x == activeX && y == activeY) {
-                                        setActiveTile(newX, newY);
-                                    }
-                                    */
                                 }
                             } else if (tileExists(newX, newY)){
                                 //Copy by movement
@@ -137,12 +111,6 @@ public class World {
                                 map[x][y] = null;
                                 //Update position
                                 map[newX][newY].setPos(newX, newY);
-                                //Move active selector
-                                /*
-                                if (x == activeX && y == activeY) {
-                                    setActiveTile(newX, newY);
-                                }
-                                */
                             }
                             
                         }

@@ -5,18 +5,17 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
     
-
-
 /**
  * [Grass.java]
- * @version 1.2
+ * @version 3.0
  * @author Allen Liu
- * @since April 26, 2019
+ * @since May 1, 2019
  * The class for a tall grass tile, which is edible and interactable by other entities
  */
 public class Grass extends Entity {
     
     private static BufferedImage grassSprite;
+    
     /**
      * Creates grass at a set position in the world
      * @param x the x position of the grass

@@ -2,9 +2,9 @@ import java.util.Scanner;
 
 /**
  * [Ecosim.java]
- * @version 1.4
+ * @version 3.0
  * @author Allen Liu
- * @since April 26, 2019
+ * @since May 1, 2019
  * An ecosystem simulator with sheep, grass, and wolves<br>
  * Additional Features/Modifications:<br>
  * - Sheep and Wolves can mate, and produce offspring in a nearby tile (if possible)<br>
@@ -22,7 +22,6 @@ public class EcoSim {
         int gridWidth, gridHeight;
         double plantSpawn, sheepSpawn, wolfSpawn;
         double plantRate;
-        double framesPerSecond;
         long turnDelay;
             
         System.out.println("Would you like the default configuration? (Y/N)");
@@ -36,7 +35,6 @@ public class EcoSim {
             sheepSpawn = 0.3;
             wolfSpawn = 0.05;
             plantRate = 0.05;
-            framesPerSecond = 30;
             turnDelay = 1000;
         } else {
             System.out.println("Enter the world width");
@@ -53,6 +51,9 @@ public class EcoSim {
             
             System.out.println("Enter the plant regrowth rate (chance per tile)");
             plantRate = input.nextDouble();
+            
+            System.out.println("Enter the delay between each turn");
+            turnDelay = input.nextLong();
         }
         
         //initialize sprites
@@ -67,8 +68,10 @@ public class EcoSim {
         
         long lastTurn = System.currentTimeMillis();
         
+        //Use a loop without thread.sleep() to allow for responsive window and timed map
         while ((map.getNumSheep() > 0) && (map.getNumWolves() > 0)) {
-            if (System.currentTimeMillis() - lastTurn > 1000) {
+            //Only update map after the specified delay
+            if (System.currentTimeMillis() - lastTurn > turnDelay) {
                 map.tick();
                 lastTurn = System.currentTimeMillis();
                 grid.incrementTurn();
@@ -77,10 +80,13 @@ public class EcoSim {
             grid.refresh();
         }
     
+        //Extinction messages
         if (map.getNumSheep() <= 0) {
             System.out.println("Sheep Extinction");
+            grid.endSimulation("Sheep Extinction");
         } else if (map.getNumWolves() <= 0) {
             System.out.println("Wolf Extinction");
+            grid.endSimulation("Wolf Extinction");
         }
     }
 }

@@ -9,9 +9,9 @@ import java.io.IOException;
 
 /**
  * [Wolf.java]
- * @version 1.7
+ * @version 3.0
  * @author Allen Liu
- * @since April 26, 2019
+ * @since May 1, 2019
  * A class for wolf entities, who will try to group with other wolves and seek out sheep, 
  * they can also trample grass
  */
@@ -177,7 +177,7 @@ public class Wolf extends Entity implements Comparable<Wolf> {
     /**
      * [getHeuristicTile]
      * Finds the best tile to move to based on positions of other entities within this entity's vision range.
-     * Heuristic is based on moving to the nearest sheep
+     * Heuristic is based on moving to the nearest sheep or wolf
      * <br><br>
      * Process description:
      * Start by doing bfs with a range based on the entity's range, save distance in an array
@@ -194,10 +194,16 @@ public class Wolf extends Entity implements Comparable<Wolf> {
      * 4 is left
      */
     public int getHeuristicTile() {
+        //Distance from the source wolf
         int[][] distance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
+        //Distance grid of wolves and sheep, measuring distance from the nearest one 
         int[][] wolfDistance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
         int[][] sheepDistance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
         
+        int currentX = this.getX();
+        int currentY = this.getY();
+        
+        //Initialize with -1 acting as unvisited values
         for (int i = 0; i < this.getWorld().getWidth(); ++i) {
             for (int j = 0; j < this.getWorld().getHeight(); ++j) {
                 distance[i][j] = -1;
@@ -218,7 +224,7 @@ public class Wolf extends Entity implements Comparable<Wolf> {
         //Scout to find all entities in range
         ArrayList<Integer> tileQueue = new ArrayList<Integer>(); 
         tileQueue.add(this.getWorld().coordToInt(getX(), getY()));
-        distance[getX()][getY()] = 0;
+        distance[currentX][currentY] = 0;
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
@@ -290,27 +296,39 @@ public class Wolf extends Entity implements Comparable<Wolf> {
             }
         }
 
-        int minValue = sheepDistance[getX()][getY()];
+        /* Heuristic: Go to the nearest sheep if hungry.
+         * While not hungry, seek either the nearest sheep or nearest wolf (whatever's closest).
+         * (Guess wolves go crazy when unfed) - this is the most accurate thing I can make Mr. Mangat,
+         * I'm coding this to my dog's whining.
+         */
+        int minValue;
+        
+        if (this.getHealth() > this.hungerThreshold) {
+            minValue = sheepDistance[currentX][currentY];
+        } else {
+            minValue = Math.min(wolfDistance[currentX][currentY], sheepDistance[currentX][currentY]);
+        }
         int direction = 0;
         for (int i = 0; i < 4; ++i) {
-            if (this.getWorld().tileExists(getX() + Entity.X_MOVES[i], getY() + Entity.Y_MOVES[i])) {
-                //Heuristic: Math.min(s(), w())
-                int x = getX() + Entity.X_MOVES[i];
-                int y = getY() + Entity.Y_MOVES[i];
+            if (this.getWorld().tileExists(currentX + Entity.X_MOVES[i], currentY + Entity.Y_MOVES[i])) {
+                int x = currentX + Entity.X_MOVES[i];
+                int y = currentY + Entity.Y_MOVES[i];
                 //Heuristic based on hunger check
-                int h = 0;
+                int heuristic = 0;
                 if (this.getHealth() > this.hungerThreshold) {
-                    h = sheepDistance[x][y];
+                    heuristic = sheepDistance[x][y];
                 } else {
-                    h = Math.min(wolfDistance[x][y], sheepDistance[x][y]);
+                    heuristic = Math.min(wolfDistance[x][y], sheepDistance[x][y]);
                 }
                 
-                if (h == minValue) {
+                //Compare to see if a smaller value is found,
+                //If a value is matched, choose randomly between directions
+                if (heuristic == minValue) {
                     if (Math.random() < 0.5) {
                         direction = i + 1;
                     }
-                } else if (h < minValue) {
-                    minValue = h;
+                } else if (heuristic < minValue) {
+                    minValue = heuristic;
                     direction = i + 1;
                 }
             }

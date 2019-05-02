@@ -11,9 +11,9 @@ import java.io.IOException;
 
 /**
  * [Sheep.java]
- * @version 1.9
+ * @version 3.0
  * @author Allen Liu
- * @since April 26, 2019
+ * @since May 1, 2019
  * A class for sheep entities, who will try to group with other sheep and seek out grass,
  * while avoiding wolves
  */
@@ -205,7 +205,6 @@ public class Sheep extends Entity {
      * 4 is left
      */
     public int getHeuristicTile() {
-        
         //Distance arrays:
         //Used to get all tiles in vision range
         int[][] distance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
@@ -219,6 +218,9 @@ public class Sheep extends Entity {
         //Used to get the distance to the closest grass for all tiles in range
         int[][] grassDistance = new int[this.getWorld().getWidth()][this.getWorld().getHeight()];
         
+        //Get position for simplicity
+        int currentX = this.getX();
+        int currentY = this.getY();
         
         //Prefill arrays with -1 (unexplored)
         for (int i = 0; i < this.getWorld().getWidth(); ++i) {
@@ -238,8 +240,8 @@ public class Sheep extends Entity {
 
         //Scout to find all entities in range
         ArrayList<Integer> tileQueue = new ArrayList<Integer>(); 
-        tileQueue.add(this.getWorld().coordToInt(this.getX(), this.getY()));
-        distance[this.getX()][this.getY()] = 0;
+        tileQueue.add(this.getWorld().coordToInt(currentX, currentY));
+        distance[currentX][currentY] = 0;
         
         while (!tileQueue.isEmpty()) {
             int tile = tileQueue.remove(0);
@@ -337,10 +339,12 @@ public class Sheep extends Entity {
             }
         }
 
-        //Heuristic: minimum value of sheep or grass distance minus the minimum distance from a wolf,
-        //lower values are better
-        int minValue = Math.min(sheepDistance[this.getX()][this.getY()], grassDistance[this.getX()][this.getY()]) - 
-            Math.max(0, wolfDistance[this.getX()][this.getY()]);
+        /* Heuristic: Go to either sheep or grass (whatever's closest), but run away from wolves.
+         * Numeric values are used, where lowest value is preferred
+         */
+        int closestBenefit = Math.min(sheepDistance[currentX][currentY] + 1, grassDistance[currentX][currentY]);
+        int closestDanger = (Math.max(0, wolfDistance[currentX][currentY]));
+        int minValue =  closestBenefit - closestDanger;
         
         //The optimal direction to move in
         int direction = 0;
@@ -351,15 +355,18 @@ public class Sheep extends Entity {
                 int x = this.getX() + Entity.X_MOVES[i];
                 int y = this.getY() + Entity.Y_MOVES[i];
                 //Create heuristic value for a tile
-                int h = Math.min(sheepDistance[this.getX()][this.getY()], grassDistance[x][y]) -
-                    Math.max(0, wolfDistance[x][y]);
+                closestBenefit = Math.min(sheepDistance[x][y] + 1, grassDistance[x][y]);
+                closestDanger = Math.max(0, wolfDistance[x][y]);
+                int heuristic = closestBenefit - closestDanger;  
                 
-                if (h == minValue) {
+                //Compare to see if a smaller value is found,
+                //If a value is matched, choose randomly between directions
+                if (heuristic == minValue) {
                     if (Math.random() < 0.5) {
                         direction = i + 1;
                     }
-                } else if (h < minValue) {
-                    minValue = h;
+                } else if (heuristic < minValue) {
+                    minValue = heuristic;
                     direction = i + 1;
                 }
             }
